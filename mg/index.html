@@ -58,6 +58,49 @@ footer{position:sticky;bottom:0;background:var(--bg);padding:8px 0 4px;margin-to
 .fl2{position:absolute;bottom:-40px;font-size:28px;font-style:normal;opacity:0;animation:rise 9s linear infinite}@keyframes rise{10%{opacity:.7}to{transform:translateY(-110vh) rotate(40deg);opacity:0}}
 @media(max-width:860px){.tinfo{grid-template-columns:1fr}}
 @media(max-width:860px){main,.bg3{grid-template-columns:1fr}}
+/* ===== ワイド画面：1画面に収める3カラムレイアウト（表示のみ調整・中身/動作は元のまま） ===== */
+@media (min-width:1100px){
+html,body{height:100%}
+body{max-width:none;margin:0;height:100vh;height:100dvh;overflow:hidden;padding:env(safe-area-inset-top,0px) 12px env(safe-area-inset-bottom,0px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1.15fr) minmax(0,.8fr);grid-template-rows:auto minmax(0,1fr) auto;gap:6px 10px}
+header{grid-column:1/-1;grid-row:1;padding:4px 0 0}header h1{font-size:16px}
+/* 左：盤面（ホイール／個人ボード／カード山札） */
+.board{grid-column:1;grid-row:2;margin:0;min-height:0;overflow-x:hidden;overflow-y:auto;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-areas:"disc pb" "disc deck" "risk strip";grid-template-rows:auto auto auto;align-content:start;align-items:start;gap:8px}
+.bg3,.col{display:contents}
+.bg3>.m:nth-child(1){grid-area:disc}
+.bg3>.m:nth-child(2){grid-area:pb}
+.col>.m:nth-child(1){grid-area:deck}
+.col>.m:nth-child(2){grid-area:risk}
+.strip{grid-area:strip;margin:0;align-self:center}
+.board svg{max-width:none!important}
+.board .m{font-size:clamp(11px,1.45vh,15px)}.board .m b{font-size:clamp(12px,1.6vh,16px)}
+.board .m div[style]{font-size:clamp(11px,1.4vh,14px)!important}
+.cg{font-size:clamp(11px,1.4vh,14px)}.tc{font-size:clamp(11px,1.4vh,14px)}
+.ch,.dk2{font-size:clamp(11px,1.4vh,14px)}
+/* 中央：解説ステージ（縦スペースいっぱいに使う） */
+main{display:contents}
+#stage{grid-column:2;grid-row:2;min-height:0;overflow-x:hidden;overflow-y:auto}
+#stage p{font-size:clamp(14px,1.9vh,19px)}
+h2{font-size:clamp(18px,2.7vh,28px)}.ic{font-size:clamp(32px,4.6vh,52px)}
+#stage table{font-size:clamp(13px,1.7vh,17px)}
+.bc{font-size:clamp(13px,1.65vh,17px)}.msg,.msg p{font-size:clamp(14px,1.7vh,17px)!important}
+.pt{font-size:clamp(14px,1.7vh,17px)}
+/* 右：指標（現金・在庫など）とMQ会計図 */
+.side{grid-column:3;grid-row:2;min-height:0;overflow-x:hidden;overflow-y:auto}
+.dash{grid-template-columns:repeat(3,1fr)}
+.dc small{font-size:clamp(12px,1.5vh,15px)}.dc b{font-size:clamp(20px,3vh,30px)}.dc i{font-size:clamp(11px,1.3vh,13px)}
+#mqd{height:clamp(150px,26vh,300px)}
+.mq b{font-size:clamp(16px,2.1vh,22px)}.gl{grid-template-columns:repeat(3,1fr);font-size:clamp(12px,1.4vh,14px)}
+/* 下：操作バー（注記を同じ行に回して高さを節約） */
+footer{grid-column:1/-1;grid-row:3;position:static;margin:0;padding:2px 0 6px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
+footer .pg{flex:0 0 100%}footer .ct{margin:0;flex:0 0 auto}footer .nt{margin:0;flex:1 1 320px}
+}
+@media (min-width:1100px) and (max-height:860px){
+body{row-gap:4px}
+.card{padding:8px 12px}.ic{line-height:1.05}h2{margin:2px 0}#stage p{margin:3px 0;line-height:1.45}
+#stage td,#stage th{padding:2px 8px}.pt{margin:5px 0;padding:5px 10px}.msg{margin-top:6px;padding:6px 12px}.msg p{line-height:1.5}
+.bc{padding:4px 10px;margin:3px 0}.dcs{margin:4px 0}.dc{padding:5px 8px}.board{padding:6px;gap:6px}
+.board .m{padding:5px 8px}.gl{margin-top:4px}footer .ct{gap:4px}footer button{padding:4px 10px}
+}
 </style></head><body>
 <div id="title"><div class="deco"><div class="tbg"></div>
 <i class="fl2" style="left:8%">🃏</i><i class="fl2" style="left:22%;animation-delay:-3s">💴</i><i class="fl2" style="left:40%;animation-delay:-6s">🏭</i><i class="fl2" style="left:62%;animation-delay:-2s">🛡️</i><i class="fl2" style="left:78%;animation-delay:-5s">🔥</i><i class="fl2" style="left:92%;animation-delay:-7.5s">📈</i></div>
