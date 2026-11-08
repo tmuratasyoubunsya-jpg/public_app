@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ぷらねっと君の しさくゲーム</title>
+<meta name="description" content="ブラウザですぐ遊べる、試作ミニゲームのあつまりです。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef1fb; --card:#ffffff; --ink:#262b3d; --sub:#5d6480; --accent:#5b6fd6; --accent2:#3f51b5;
+  --shadow:rgba(40,50,90,.14); --tag:#e7ebfb;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#151a2c; --card:#20263b; --ink:#eef0fa; --sub:#a9b0cc; --accent:#8b9bff; --accent2:#6f7fe8;
+    --shadow:rgba(0,0,0,.35); --tag:#2b3352;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151a2c; --card:#20263b; --ink:#eef0fa; --sub:#a9b0cc; --accent:#8b9bff; --accent2:#6f7fe8;
+  --shadow:rgba(0,0,0,.35); --tag:#2b3352;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Zen Maru Gothic",system-ui,sans-serif; line-height:1.6;
+  background-image:radial-gradient(circle at 12% 8%,rgba(91,111,214,.10) 0 120px,transparent 121px),
+                   radial-gradient(circle at 88% 30%,rgba(255,200,90,.10) 0 90px,transparent 91px);
+}
+main{max-width:960px;margin:0 auto;padding:40px 16px 56px}
+header{text-align:center;margin-bottom:32px}
+header small{display:block;color:var(--sub);font-weight:700;font-size:15px}
+h1{margin:2px 0 8px;font-size:clamp(28px,6vw,40px);font-weight:900;color:var(--accent);letter-spacing:.02em}
+header p{margin:0;color:var(--sub)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+a.card{
+  display:flex;gap:14px;align-items:flex-start;text-decoration:none;color:inherit;
+  background:var(--card);border-radius:20px;padding:18px;box-shadow:0 4px 0 var(--shadow);
+  transition:transform .15s,box-shadow .15s;
+}
+a.card:hover{transform:translateY(-3px);box-shadow:0 7px 0 var(--shadow)}
+a.card:active{transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
+a.card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.ic{flex:none;width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--tag)}
+.card h2{margin:0 0 2px;font-size:18px;font-weight:900}
+.card p{margin:0;color:var(--sub);font-size:14px}
+.tag{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--accent);background:var(--tag);border-radius:999px;padding:1px 10px}
+footer{margin-top:40px;text-align:center;color:var(--sub);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <small>ぷらねっと君の</small>
+    <h1>しさくゲーム</h1>
+    <p>ブラウザで すぐ遊べる 試作ミニゲームです。カードを えらんでね。</p>
+  </header>
+
+  <div class="grid">
+    <a class="card" href="planet-jump.html">
+      <div class="ic" aria-hidden="true">🌍</div>
+      <div><h2>ぷらねっと君ジャンプ</h2><p>星をふんで、上へ上へ。</p><span class="tag">アクション</span></div>
+    </a>
+    <a class="card" href="zero-g-runner.html">
+      <div class="ic" aria-hidden="true">🛰️</div>
+      <div><h2>無重力ランナー</h2><p>重力を反転して、ステーションを駆け抜けろ。</p><span class="tag">アクション</span></div>
+    </a>
+    <a class="card" href="comet-slingshot.html">
+      <div class="ic" aria-hidden="true">☄️</div>
+      <div><h2>彗星スリングショット</h2><p>引っ張って、はなして、ゴールへ。</p><span class="tag">アクション</span></div>
+    </a>
+    <a class="card" href="planet-breakout.html">
+      <div class="ic" aria-hidden="true">🪐</div>
+      <div><h2>惑星ブロック崩し</h2><p>惑星をぜんぶ はじき飛ばそう。</p><span class="tag">アクション</span></div>
+    </a>
+    <a class="card" href="pin-slide.html">
+      <div class="ic" aria-hidden="true">📌</div>
+      <div><h2>ピンずらしナイト</h2><p>ピンを たて・よこに ずらして、金のピンを でぐちへ。</p><span class="tag">パズル</span></div>
+    </a>
+    <a class="card" href="constellation-sudoku.html">
+      <div class="ic" aria-hidden="true">✨</div>
+      <div><h2>星座数独</h2><p>6つの星座を、たて・よこ・ブロックに1つずつ。</p><span class="tag">パズル</span></div>
+    </a>
+    <a class="card" href="spaceship-escape.html">
+      <div class="ic" aria-hidden="true">🚀</div>
+      <div><h2>宇宙船からの脱出</h2><p>のこり時間10分。なぞを解いて 宇宙船から にげだそう。</p><span class="tag">なぞとき</span></div>
+    </a>
+    <a class="card" href="security-quiz.html">
+      <div class="ic" aria-hidden="true">🔒</div>
+      <div><h2>情報セキュリティ○×クイズ</h2><p>ぷらねっと君と、○×で 情報セキュリティを まなぼう。</p><span class="tag">クイズ</span></div>
+    </a>
+  </div>
+
+  <footer>どれも 試作版です。セーブは この ブラウザの中だけに のこります。</footer>
+</main>
+</body>
+</html>
