@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ビジネス用語デイリー5問</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#dce8fb;--bg2:#c3d5f4;--panel:#ffffff;--panel2:#eef3fd;--line:#aebfe3;--text:#16204a;--muted:#55639a;--accent:#f2a900;--accent-ink:#2a1d00;--ok:#138a7c;--bad:#d6454b;--shadow:rgba(22,32,74,.3);--star:rgba(255,255,255,0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1737;--bg2:#080d22;--panel:#1b2650;--panel2:#141d42;--line:#34416f;--text:#eef1fb;--muted:#a3aed6;--accent:#ffd35a;--accent-ink:#2a1d00;--ok:#62d6c6;--bad:#ff7a80;--shadow:rgba(0,0,0,.55);--star:rgba(255,255,255,.75)}}
+:root[data-theme="dark"]{--bg:#0f1737;--bg2:#080d22;--panel:#1b2650;--panel2:#141d42;--line:#34416f;--text:#eef1fb;--muted:#a3aed6;--accent:#ffd35a;--accent-ink:#2a1d00;--ok:#62d6c6;--bad:#ff7a80;--shadow:rgba(0,0,0,.55);--star:rgba(255,255,255,.75)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;font-weight:500;color:var(--text);background:linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(1.6px 1.6px at 8% 14%,var(--star),transparent),radial-gradient(1.2px 1.2px at 22% 66%,var(--star),transparent),radial-gradient(1.8px 1.8px at 35% 28%,var(--star),transparent),radial-gradient(1.2px 1.2px at 63% 12%,var(--star),transparent),radial-gradient(1.8px 1.8px at 90% 30%,var(--star),transparent),radial-gradient(1.2px 1.2px at 94% 88%,var(--star),transparent)}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.app{position:relative;max-width:520px;margin:0 auto;padding:12px 14px 32px}
+.mascot{flex:none;display:block;width:46px;height:46px}.mascot.sm{width:42px;height:42px}.mascot.xl{width:96px;height:96px}
+.mc-ring{fill:none;stroke:var(--ok);stroke-width:7;stroke-linecap:round}.mc-body{fill:var(--accent)}.mc-eye{fill:#2a1d00}.mc-mouth{fill:none;stroke:#2a1d00;stroke-width:3.2;stroke-linecap:round}.mc-cheek{fill:#ff8f8f;opacity:.65}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand h1{margin:0;font-size:clamp(1.1rem,4vw,1.45rem);font-weight:900;line-height:1.2}.brand p{margin:2px 0 0;font-size:.76rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{height:32px;padding:0 12px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font-size:.85rem;font-weight:900;display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.chip span{font-size:.72rem;font-weight:500;color:var(--muted)}
+.cv{display:block;width:100%;height:auto;border-radius:22px;border:1px solid var(--line);touch-action:none;background:#060b22;user-select:none;-webkit-user-select:none;box-shadow:0 10px 28px var(--shadow)}
+.cap{text-align:center;color:var(--muted);font-size:.82rem;margin:10px 0 0;line-height:1.6}
+.btn{font-weight:700;font-size:.92rem;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.5em 1.2em;min-height:46px;cursor:pointer}
+.btn:hover:not([disabled]){border-color:var(--muted)}.btn[disabled]{opacity:.45;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn:focus-visible,.lvl:focus-visible,.card:focus-visible,.slot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:14px;background:color-mix(in srgb,var(--bg2) 82%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow-y:auto}
+.overlay[hidden]{display:none}
+.sheet{width:min(520px,100%);max-height:100%;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 20px 18px;box-shadow:0 14px 40px var(--shadow)}
+.sheet h2{margin:0;font-size:1.4rem;font-weight:900;line-height:1.3}.sheet .head{display:flex;align-items:center;gap:14px;margin-bottom:8px}.sheet p{margin:0 0 12px;line-height:1.8}
+.rules{margin:0 0 6px;padding-left:1.2em;line-height:1.8;color:var(--muted);font-size:.9rem}
+.meta{color:var(--muted);font-size:.9rem}.big{font-size:2.6rem;font-weight:900;line-height:1.1;margin:2px 0}.big small{font-size:1rem;color:var(--muted);font-weight:700}
+.stars{font-size:1.8rem;letter-spacing:.15em;color:var(--accent)}
+.lvls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.lvl{display:flex;flex-direction:column;align-items:center;gap:2px;background:color-mix(in srgb,var(--accent) 16%,var(--panel));border:2px solid var(--accent);border-radius:14px;padding:10px 4px;cursor:pointer;font-weight:900}
+.lvl span{font-size:.74rem;color:var(--muted);font-weight:500}.lvl[disabled]{opacity:.4;cursor:default;border-color:var(--line);background:var(--panel2)}
+.lvl:hover:not([disabled]){background:var(--accent);color:var(--accent-ink)}.lvl:hover:not([disabled]) span{color:var(--accent-ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);max-width:90vw;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:9500;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.app{max-width:560px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 18px 16px;box-shadow:0 10px 28px var(--shadow)}
+.card h2{margin:0 0 4px;font-size:1.15rem;font-weight:900}
+.card p{margin:0 0 12px;line-height:1.75}
+.big{font-size:2.4rem}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btns .btn{flex:1 1 150px}
+.cd{font-variant-numeric:tabular-nums;font-weight:900}
+.dots{display:flex;gap:8px;margin:0 0 12px}
+.dots i{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.dots i.cur{background:var(--accent)}.dots i.ok{background:var(--ok)}.dots i.ng{background:var(--bad)}
+.cat{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:.78rem;font-weight:700;color:var(--muted)}
+.qn{margin:0 0 6px;font-size:.82rem;color:var(--muted);font-weight:700}
+.qt{margin:10px 0 14px;font-size:clamp(1.1rem,4.4vw,1.35rem);font-weight:900;line-height:1.7}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;min-height:58px;padding:10px 14px;background:var(--panel2);border:2px solid var(--line);border-radius:16px;cursor:pointer;font-weight:700;line-height:1.5;transition:background .15s,border-color .15s}
+.opt .no{flex:none;width:30px;height:30px;border-radius:50%;background:var(--panel);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:900}
+.opt:hover:not([disabled]){border-color:var(--muted)}
+.opt[disabled]{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--okbg)}.opt.wrong{border-color:var(--bad);background:var(--badbg)}.opt.dim{opacity:.55}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.fb{margin-top:14px;padding:12px 14px;border-radius:14px;border:2px solid var(--line);line-height:1.75}
+.fb[hidden]{display:none}.fb.ok{border-color:var(--ok);background:var(--okbg)}.fb.ng{border-color:var(--bad);background:var(--badbg)}
+.fb b{display:block;font-size:1.05rem;margin-bottom:2px}
+.err{margin:14px 0;padding:14px;border-radius:14px;border:2px solid var(--bad);background:var(--badbg);line-height:1.8;font-size:.92rem}
+.revlist{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:10px}
+.revlist li{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);line-height:1.7;font-size:.92rem}
+.revlist li.ok{border-color:var(--ok)}.revlist li.ng{border-color:var(--bad)}
+.revlist b{display:block}
+.rank{display:inline-block;padding:2px 14px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:900}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="mascot" viewBox="0 0 120 120"><ellipse class="mc-ring" cx="60" cy="66" rx="52" ry="15" transform="rotate(-16 60 66)"/><circle class="mc-body" cx="60" cy="60" r="35"/><circle class="mc-eye" cx="48" cy="56" r="4.6"/><circle class="mc-eye" cx="72" cy="56" r="4.6"/><ellipse class="mc-cheek" cx="41" cy="68" rx="6" ry="4"/><ellipse class="mc-cheek" cx="79" cy="68" rx="6" ry="4"/><path class="mc-mouth" d="M52 68 Q60 77 68 68"/><path class="mc-ring" d="M9 66 A52 15 0 0 0 111 66" transform="rotate(-16 60 66)"/></symbol></defs></svg>
+
+<main class="app">
+<header class="top"><div class="brand"><svg class="mascot sm" aria-hidden="true"><use href="#mascot"/></svg><div><h1>ビジネス用語デイリー5問</h1><p id="dateTxt"></p></div></div></header>
+<div class="chips"><div class="chip">連続 <b id="streak">0</b>日</div><div class="chip">ベスト連続 <b id="best">0</b>日</div><div class="chip">挑戦した日 <b id="total">0</b>日</div></div>
+<section id="home" aria-live="polite"></section>
+<section id="quiz" class="card" hidden>
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <span class="cat" id="cat"></span>
+  <p class="qn" id="qn"></p>
+  <p class="qt" id="qt"></p>
+  <div class="opts" id="opts"></div>
+  <div class="fb" id="fb" hidden><b id="fbHead"></b><span id="fbExp"></span></div>
+  <div class="btns"><button class="btn primary" id="btnNext" type="button" hidden>つぎへ</button></div>
+</section>
+<p class="cap" id="count"></p>
+</main>
+<div class="overlay" id="rev" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="revTitle" id="revSheet"></div></div>
+
+<div class="overlay" id="intro"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="introTitle"><div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2 id="introTitle">ビジネス用語デイリー5問</h2></div><p>ビジネスで よく出る用語を、毎日5問だけ おさらいしよう。ぷらねっと君が応援するよ！</p><ul class="rules"><li>毎日0時（日本時間）に、新しい5問が出るよ。問題は、みんな同じ5問。</li><li>答えるたびに、短い解説が出るよ。ふりかえりもできるよ。</li><li>毎日続けると、「連続日数」がのびていくよ。</li><li>れんしゅう（ランダム5問）は、何回でもあそべるよ。</li></ul><div class="row"><button class="btn primary" id="btnStart" type="button">はじめる</button></div></div></div>
+<div class="overlay" id="end" hidden><div class="sheet" role="dialog" aria-modal="true" id="endSheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(()=>{
+'use strict';
+
+const $=(s)=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const fmt=(s)=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+let toastTimer=null;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+async function share(text){try{if(navigator.share){await navigator.share({text});return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{await navigator.clipboard.writeText(text);toast('結果をコピーしました')}catch(e){toast(text)}}
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function showEnd(o){const s=$('#endSheet');
+ s.innerHTML='<div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2></h2></div><div class="big"></div><p class="txt"></p><p class="meta"></p><div class="row"><button class="btn primary" id="eAgain" type="button">もう一度あそぶ</button><button class="btn" id="eShare" type="button">結果をシェア</button></div>';
+ s.querySelector('h2').textContent=o.title;s.querySelector('.big').innerHTML=o.big||'';s.querySelector('.txt').textContent=o.text||'';s.querySelector('.meta').textContent=o.meta||'';
+ s.querySelector('#eAgain').textContent=o.again||'もう一度あそぶ';s.querySelector('#eAgain').addEventListener('click',()=>{$('#end').hidden=true;o.onAgain()});
+ s.querySelector('#eShare').addEventListener('click',()=>share(o.share));
+ if(o.noShare)s.querySelector('#eShare').remove();
+ $('#end').hidden=false;s.querySelector('#eAgain').focus({preventScroll:true})}
+function fitCanvas(cv,W,H){const dpr=Math.min(window.devicePixelRatio||1,2.5);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.aspectRatio=W+'/'+H;const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return ctx}
+function localPt(cv,e,W,H){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+const STARS=Array.from({length:70},()=>({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2,r:Math.random()*1.3+.4}));
+function drawSky(ctx,W,H,scroll=0,top='#060b22',bot='#10194a'){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,top);g.addColorStop(1,bot);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#fff';for(const s of STARS){const y=((s.y*H+scroll*s.z*.15)%H+H)%H;ctx.globalAlpha=.35+s.z*.6;ctx.beginPath();ctx.arc(s.x*W,y,s.r,0,6.283);ctx.fill()}ctx.globalAlpha=1}
+function drawMascot(ctx,x,y,r,o={}){const s=r/35;ctx.save();ctx.translate(x,y);ctx.rotate(o.rot||0);ctx.scale(s*(o.sx||1),s*(o.sy||1));
+ ctx.lineCap='round';ctx.lineWidth=7;ctx.strokeStyle='#62d6c6';
+ ctx.save();ctx.translate(0,6);ctx.rotate(-16*Math.PI/180);ctx.beginPath();ctx.ellipse(0,0,52,15,0,Math.PI,Math.PI*2);ctx.stroke();ctx.restore();
+ if(o.glow){ctx.shadowColor='rgba(255,211,90,.8)';ctx.shadowBlur=18}
+ ctx.fillStyle='#ffd35a';ctx.beginPath();ctx.arc(0,0,35,0,6.283);ctx.fill();ctx.shadowBlur=0;
+ ctx.fillStyle='#ff8f8f';ctx.globalAlpha=.65;ctx.beginPath();ctx.ellipse(-19,8,6,4,0,0,6.283);ctx.ellipse(19,8,6,4,0,0,6.283);ctx.fill();ctx.globalAlpha=1;
+ ctx.fillStyle='#2a1d00';ctx.strokeStyle='#2a1d00';ctx.lineWidth=3.2;
+ if(o.sad){ctx.beginPath();ctx.arc(-12,-4,4.6,0,6.283);ctx.arc(12,-4,4.6,0,6.283);ctx.fill();ctx.beginPath();ctx.moveTo(-8,13);ctx.quadraticCurveTo(0,6,8,13);ctx.stroke()}
+ else{ctx.beginPath();ctx.arc(-12,-4,4.6,0,6.283);ctx.arc(12,-4,4.6,0,6.283);ctx.fill();
+  if(o.oh){ctx.beginPath();ctx.ellipse(0,12,6,7,0,0,6.283);ctx.fill()}else{ctx.beginPath();ctx.moveTo(-8,8);ctx.quadraticCurveTo(0,17,8,8);ctx.stroke()}}
+ ctx.lineWidth=7;ctx.strokeStyle='#62d6c6';ctx.save();ctx.translate(0,6);ctx.rotate(-16*Math.PI/180);ctx.beginPath();ctx.ellipse(0,0,52,15,0,0,Math.PI);ctx.stroke();ctx.restore();
+ ctx.restore()}
+function drawStar(ctx,x,y,r,col='#ffd35a',rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();ctx.fill();ctx.restore()}
+
+
+const QURL='questions.json';
+const EMBED=null;
+const KEY='biz-quiz-v1',DAY=86400000,JST=9*3600000,PERDAY=5,SEED=20260101;
+let Qs=[],run=null,S=Object.assign({last:'',streak:0,best:0,total:0,days:{},seen:false},store.get(KEY,{})),cdTimer=null;
+const dayNum=()=>Math.floor((Date.now()+JST)/DAY);
+const dateOf=(n)=>new Date(n*DAY).toISOString().slice(0,10);
+const dispDate=(s)=>{const[y,m,d]=s.split('-');return `${y}年${+m}月${+d}日`};
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function seededShuffle(arr,seed){const a=arr.slice(),r=mulberry32(seed);for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function save(){const k=Object.keys(S.days).sort();while(k.length>120)delete S.days[k.shift()];store.set(KEY,S)}
+const byId=(id)=>Qs.find(q=>q.id===id);
+/* ---- 問題の読み込み（別ファイル questions.json） ---- */
+function norm(d){const a=Array.isArray(d)?d:(d&&d.questions)||[];const seen=new Set(),out=[];
+ for(const q of a){if(!q||!q.q||!q.a||!Array.isArray(q.w)||q.w.length<1)continue;const id=+q.id;if(!Number.isFinite(id)||seen.has(id))continue;seen.add(id);
+  out.push({id,cat:q.cat||'',q:String(q.q),a:String(q.a),w:q.w.map(String),e:q.e?String(q.e):''})}return out}
+async function loadQs(){try{const r=await fetch(QURL,{cache:'no-cache'});if(!r.ok)throw new Error('http '+r.status);return norm(await r.json())}
+ catch(e){if(EMBED)return norm(EMBED);throw e}}
+/* ---- 今日の5問：日付から決まる（全員同じ。1周するまで同じ問題は出ない） ---- */
+function dailyIds(n){const ids=Qs.map(q=>q.id).sort((a,b)=>a-b),perm=seededShuffle(ids,SEED),k=Math.min(PERDAY,perm.length),out=[];
+ for(let i=0;i<k;i++)out.push(perm[(n*PERDAY+i)%perm.length]);return out}
+function makeItems(ids,seedKey){return ids.map(id=>{const q=byId(id);const ch=[{t:q.a,c:true},...q.w.map(t=>({t,c:false}))];
+ return{q,choices:seedKey?seededShuffle(ch,hash(id+'|'+seedKey)):ch.map(x=>x).sort(()=>Math.random()-.5),chosen:null}})}
+/* ---- 画面 ---- */
+function streakNow(){const t=dayNum(),d=dateOf(t),y=dateOf(t-1);return(S.last===d||S.last===y)?S.streak:0}
+function renderChips(){$('#streak').textContent=streakNow();$('#best').textContent=S.best;$('#total').textContent=S.total;$('#count').textContent=Qs.length?`収録問題数 ${Qs.length}問`:''}
+function leftTxt(){const left=DAY-((Date.now()+JST)%DAY),h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000),s=Math.floor(left%60000/1000);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+function renderHome(){const t=dayNum(),d=dateOf(t),rec=S.days[d];$('#dateTxt').textContent=dispDate(d);renderChips();
+ const home=$('#home');home.hidden=false;$('#quiz').hidden=true;
+ if(rec){const stars=rec.s===5?3:rec.s>=3?2:1;
+  home.innerHTML=`<div class="card"><h2>きょうの5問は 完了！</h2><div class="big">${rec.s}<small> ／ ${rec.ids.length}問</small></div><p class="meta">連続 ${streakNow()}日　・　つぎの5問まで あと <span class="cd" id="cd"></span></p>
+   <div class="btns"><button class="btn primary" id="bReview" type="button">きょうの問題をふりかえる</button><button class="btn" id="bShare" type="button">結果をシェア</button><button class="btn" id="bPractice" type="button">れんしゅう（ランダム5問）</button></div></div>`;
+  $('#bReview').addEventListener('click',()=>review(d));$('#bShare').addEventListener('click',()=>share(shareText(d)));}
+ else{home.innerHTML=`<div class="card"><h2>きょうの5問</h2><p>${dispDate(d)}の問題は、みんな同じ5問だよ。ビジネスでよく出る用語を、1日5問だけ おさらいしよう！</p>
+   <div class="btns"><button class="btn primary" id="bDaily" type="button">きょうの5問に挑戦</button><button class="btn" id="bPractice" type="button">れんしゅう（ランダム5問）</button></div></div>`;
+  $('#bDaily').addEventListener('click',()=>startRun('daily'))}
+ $('#bPractice').addEventListener('click',()=>startRun('practice'));
+ clearInterval(cdTimer);const cd=$('#cd');if(cd){cd.textContent=leftTxt();cdTimer=setInterval(()=>{const e=$('#cd');if(!e){clearInterval(cdTimer);return}e.textContent=leftTxt();if(DAY-((Date.now()+JST)%DAY)<1500)renderHome()},1000)}}
+function shareText(d){const r=S.days[d];return `「ビジネス用語デイリー5問」${dispDate(d)} ${r.s}／${r.ids.length}問（連続${streakNow()}日）`}
+function startRun(mode){const t=dayNum(),d=dateOf(t);let ids;
+ if(mode==='daily')ids=dailyIds(t);else{const today=new Set(dailyIds(t)),all=Qs.map(q=>q.id).filter(i=>!today.has(i));const pool=all.length>=PERDAY?all:Qs.map(q=>q.id);ids=seededShuffle(pool,(Math.random()*4294967295)>>>0).slice(0,Math.min(PERDAY,pool.length))}
+ run={mode,date:d,items:makeItems(ids,mode==='daily'?d:null),i:0,score:0};$('#intro').hidden=true;$('#home').hidden=true;$('#quiz').hidden=false;showQ()}
+function showQ(){const it=run.items[run.i];
+ $('#dots').innerHTML=run.items.map((x,k)=>`<i class="${x.chosen===null?(k===run.i?'cur':''):(x.ok?'ok':'ng')}"></i>`).join('');
+ $('#cat').textContent=(run.mode==='practice'?'れんしゅう ・ ':'')+(it.q.cat||'ビジネス用語');$('#qn').textContent=`第${run.i+1}問 ／ ${run.items.length}問`;$('#qt').textContent=it.q.q;
+ const box=$('#opts');box.textContent='';it.choices.forEach((c,k)=>{const b=document.createElement('button');b.type='button';b.className='opt';b.innerHTML='<span class="no"></span><span class="tx"></span>';b.querySelector('.no').textContent=k+1;b.querySelector('.tx').textContent=c.t;b.addEventListener('click',()=>choose(k));box.appendChild(b)});
+ $('#fb').hidden=true;$('#btnNext').hidden=true;window.scrollTo({top:0})}
+function choose(k){const it=run.items[run.i];if(it.chosen!==null)return;const c=it.choices[k];it.chosen=c.t;it.ok=c.c;if(c.c)run.score++;
+ const bs=[...$('#opts').children];bs.forEach((b,j)=>{b.disabled=true;if(it.choices[j].c)b.classList.add('right');else if(j===k)b.classList.add('wrong');else b.classList.add('dim')});
+ const fb=$('#fb');fb.className='fb '+(c.c?'ok':'ng');$('#fbHead').textContent=c.c?'せいかい！':`ざんねん… 正解は「${it.q.a}」`;$('#fbExp').textContent=it.q.e;fb.hidden=false;
+ $('#dots').innerHTML=run.items.map((x,j)=>`<i class="${x.chosen===null?(j===run.i?'cur':''):(x.ok?'ok':'ng')}"></i>`).join('');
+ const nb=$('#btnNext');nb.textContent=run.i===run.items.length-1?'結果を見る':'つぎへ';nb.hidden=false;nb.focus({preventScroll:true})}
+function next(){if(!run||run.items[run.i].chosen===null)return;run.i++;if(run.i>=run.items.length)finish();else showQ()}
+function finish(){const n=run.items.length,s=run.score,rank=s===n?'ビジネス用語マスター':s>=n-1?'できるビジネスパーソン':s>=Math.ceil(n/2)?'あと一歩の期待の星':'これから伸びる新人',
+ msg=s===n?'全問せいかい！ すばらしい！':s>=n-1?'おしい！ ほぼ完ぺきだよ。':s>=Math.ceil(n/2)?'いい感じ。ふりかえって、もう一度おさらいしよう。':'まずは解説を読んで、覚えていこう！';
+ if(run.mode==='daily'){const d=run.date,y=dateOf(dayNum()-1);S.days[d]={s,ids:run.items.map(x=>x.q.id),ch:run.items.map(x=>x.chosen)};
+  if(S.last!==d){S.streak=(S.last===y)?S.streak+1:1;S.best=Math.max(S.best,S.streak);S.last=d;S.total++}save()}
+ const m=run.mode,d=run.date;showEnd({title:m==='daily'?'きょうの5問、おつかれさま！':'れんしゅう、おつかれさま！',big:`${s}<small> ／ ${n}問</small>`,text:`${rank}　${msg}`,
+  meta:m==='daily'?`連続 ${streakNow()}日 ／ ベスト連続 ${S.best}日`:'れんしゅうの結果は、連続日数には入らないよ。',share:m==='daily'?shareText(d):`「ビジネス用語デイリー5問」れんしゅうで ${s}／${n}問せいかい！`,
+  again:m==='daily'?'ホームにもどる':'もう5問（れんしゅう）',onAgain:()=>{if(m==='daily'){renderHome()}else startRun('practice')}});
+ if(m==='practice'){const sh=$('#endSheet .row');const b=document.createElement('button');b.className='btn';b.type='button';b.textContent='ホームにもどる';b.addEventListener('click',()=>{$('#end').hidden=true;renderHome()});sh.appendChild(b)}
+ renderChips()}
+function review(d){const r=S.days[d];if(!r)return;let h=`<h2 id="revTitle">${dispDate(d)}の問題</h2><ul class="revlist">`;
+ r.ids.forEach((id,k)=>{const q=byId(id);if(!q){h+=`<li><b>この問題は、問題ファイルから見つかりませんでした。</b></li>`;return}const ok=r.ch[k]===q.a;
+  h+=`<li class="${ok?'ok':'ng'}"><b>${k+1}. ${esc(q.q)}</b>正解：${esc(q.a)}${ok?'':`<br>あなたの答え：${esc(r.ch[k]||'')}`}<br>${esc(q.e)}</li>`});
+ h+=`</ul><div class="row"><button class="btn primary" id="revClose" type="button">とじる</button></div>`;$('#revSheet').innerHTML=h;$('#rev').hidden=false;$('#revClose').addEventListener('click',()=>{$('#rev').hidden=true});$('#revClose').focus()}
+const esc=(s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('#rev').addEventListener('click',(e)=>{if(e.target.id==='rev')$('#rev').hidden=true});
+$('#btnNext').addEventListener('click',next);
+document.addEventListener('keydown',(e)=>{if(!run||$('#quiz').hidden||!$('#end').hidden||!$('#intro').hidden||e.isComposing)return;
+ if(e.key>='1'&&e.key<='9'){const k=+e.key-1;if(k<run.items[run.i].choices.length)choose(k)}else if((e.key==='Enter'||e.key===' ')&&!$('#btnNext').hidden&&document.activeElement.id!=='btnNext'){e.preventDefault();next()}});
+$('#btnStart').addEventListener('click',()=>{$('#intro').hidden=true;S.seen=true;save()});
+if(S.seen)$('#intro').hidden=true;
+(async()=>{$('#dateTxt').textContent=dispDate(dateOf(dayNum()));renderChips();
+ try{Qs=await loadQs();if(Qs.length<1)throw new Error('empty');renderHome()}
+ catch(e){$('#home').innerHTML=`<div class="err"><b>問題ファイル（questions.json）を読み込めませんでした。</b><br>ファイルが、このHTMLと同じ場所にあるか確認してください。パソコンでHTMLをダブルクリックして開いた場合は、ブラウザの制限で読み込めないことがあります。その場合は、GitHub Pagesなどで公開するか、簡易サーバー（python -m http.server）で開いてください。</div>`}})();
+
+
+})();
+</script>
+</body>
+</html>
