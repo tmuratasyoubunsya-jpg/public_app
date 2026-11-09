@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>人間の証明</title>
+<style>
+:root{--bg:#f4f5f7;--fg:#1c1e21;--card:#fff;--line:#d3d6db;--ac:#2a6df4;--ng:#d93025;--ok:#188038;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171a;--fg:#e8eaed;--card:#22252a;--line:#3c4048;--ac:#6b9bff;--ng:#ff6b60;--ok:#5bd17f;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Hiragino Sans","Noto Sans JP",sans-serif;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:16px}
+h1{font-size:18px;margin:8px 0;letter-spacing:.2em}
+#bar{display:flex;gap:16px;font-size:13px;margin-bottom:10px}
+#card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px;width:100%;max-width:420px;text-align:center;overflow:hidden}
+h2{font-size:16px;margin:0 0 14px}
+canvas{max-width:100%;background:#eee;border-radius:6px}
+input,textarea{width:100%;padding:10px;margin:10px 0;border:1px solid var(--line);border-radius:6px;font-size:16px;background:var(--bg);color:var(--fg)}
+button{padding:10px 18px;margin:4px;border:0;border-radius:6px;background:var(--ac);color:#fff;font-size:15px;cursor:pointer}
+button.sub{background:var(--line);color:var(--fg)}
+#msg{min-height:44px;margin-top:10px;font-size:14px}.ng{color:var(--ng)}.ok{color:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.grid button{background:var(--bg);font-size:36px;border:3px solid transparent}.grid button.on{border-color:var(--ac)}
+#run{transition:transform .15s}
+ul{list-style:none;padding:0;text-align:left;font-size:14px}
+.over{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;z-index:20}
+.box{background:var(--card);padding:20px;border-radius:10px;max-width:320px;text-align:center;position:relative}
+.x{position:absolute;top:2px;right:2px;font-size:8px;padding:2px 4px;background:transparent;color:var(--fg)}
+#cookie{position:fixed;inset:0;background:#000c;z-index:10;display:flex;align-items:center;justify-content:center;padding:16px;font-size:14px}#cookie .box{max-width:340px;width:100%}
+#toast{position:fixed;top:12px;right:12px;background:#111;color:#fff;padding:10px 14px;border-radius:8px;z-index:30;font-size:14px}
+.big{font-size:15px;line-height:1.9}
+</style></head><body>
+<h1>人間の証明</h1>
+<div id="bar"><span id="st"></span><span>人間度 <b id="hm">--</b></span><span>失敗 <b id="fl">0</b></span></div>
+<div id="card"><div id="app"></div><div id="msg"></div></div>
+<script>
+const $=s=>document.querySelector(s),app=$('#app');
+let stage=0,fails=0,timers=[];
+const R=n=>Math.floor(Math.random()*n);
+function meter(){$('#hm').textContent=Math.max(0,48-fails*6+R(9))+'%';$('#fl').textContent=fails}
+function msg(t,ok){const m=$('#msg');m.textContent=t;m.className=ok?'ok':'ng'}
+function fail(t){fails++;msg(t,0);meter()}
+function pass(t){msg(t,1);setTimeout(()=>go(stage+1),1500)}
+function later(f,ms){timers.push(setTimeout(f,ms))}
+function go(n){timers.forEach(clearTimeout);timers=[];document.querySelectorAll('.over,#cookie,#toast').forEach(e=>e.remove());stage=n;msg('');$('#st').textContent='STAGE '+(n+1)+'/5';meter();[s1,s2,s3,s4,s5][n]()}
+function modal(html){const o=document.createElement('div');o.className='over';o.innerHTML='<div class="box">'+html+'</div>';document.body.appendChild(o);return o}
+function toast(t,ms){document.querySelectorAll('#toast').forEach(e=>e.remove());const e=document.createElement('div');e.id='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),ms)}
+
+/* STAGE 1 */
+function s1(){
+ app.innerHTML='<h2>画像の文字を入力してください</h2><canvas id="c" width="300" height="100"></canvas><br><input id="i" autocomplete="off" placeholder="文字を入力"><button id="ok">確認</button><button class="sub" id="rf">↻ 更新</button>';
+ let code,tries=0;
+ function draw(){const c=$('#c'),g=c.getContext('2d');g.clearRect(0,0,300,100);g.fillStyle='#ddd';g.fillRect(0,0,300,100);
+  const set='ABCDEFGHJKMNPRSTUVWXYZ2345678';code='';for(let i=0;i<5;i++)code+=set[R(set.length)];
+  for(let i=0;i<5;i++){g.save();g.translate(30+i*55,60+R(14)-7);g.rotate((R(70)-35)/60);g.font='bold '+(40+R(14))+'px serif';const v=90+R(90);g.fillStyle='rgb('+v+','+v+','+v+')';g.fillText(code[i],0,0);g.restore()}
+  for(let i=0;i<14;i++){g.strokeStyle='rgba('+R(200)+','+R(200)+','+R(200)+',.6)';g.lineWidth=1+R(3);g.beginPath();g.moveTo(R(300),R(100));g.bezierCurveTo(R(300),R(100),R(300),R(100),R(300),R(100));g.stroke()}
+  for(let i=0;i<500;i++){g.fillStyle='rgba(120,120,120,.5)';g.fillRect(R(300),R(100),2,2)}$('#i').value=''}
+ draw();$('#rf').onclick=()=>{fail('更新回数が多すぎます。人間は迷わないものです。');draw()};
+ $('#ok').onclick=()=>{const v=$('#i').value.trim().toUpperCase();
+  if(v===code){if(tries++===0){fail('正解です。しかし正確すぎます。ロボットの疑いがあります。');draw()}else pass('認証成功。…今回は、ですが。')}
+  else{fail('不正解。人間にも読めない画像ですが、不正解は不正解です。');draw()}};
+ later(()=>{const b=document.createElement('div');b.id='cookie';
+  b.innerHTML='<div class="box"><p id="ct">🍪 当サイトはあなたの全てを記録するクッキーを使用します。<br>続行するには同意が必要です。</p><button id="agree" style="font-size:22px;padding:16px 40px">すべて同意</button><br><button class="sub" id="deny" style="font-size:8px;padding:2px 4px;margin-top:24px">拒否</button></div>';
+  document.body.appendChild(b);let k=0;const asks=['本当によろしいですか？','本当に本当ですか？\nあなたの行動履歴を第三者に提供します。','最終確認です。\n同意すると、あなたがクッキーを食べたことになります。'],lb=['はい','はい、本当に','……同意する'];$('#agree').onclick=()=>{if(k<3){$('#ct').innerHTML=asks[k].replace('\n','<br>');$('#agree').textContent=lb[k];k++;$('#agree').style.fontSize=(22-k*4)+'px'}else b.remove()};
+  $('#deny').onmouseenter=e=>{e.target.style.transform='translate('+(R(200)-100)+'px,'+(R(80)-40)+'px)'};
+  cookieTraps(b);$('#deny').ontouchstart=e=>{if(R(3)){e.preventDefault();e.target.style.transform='translate('+(R(160)-80)+'px,'+(R(80)-40)+'px)'}};$('#deny').onclick=()=>{$('#ct').innerHTML='拒否するには、アカウント登録と<br>本人確認書類のアップロードが必要です。'}},700)}
+
+function cookieTraps(b){
+ const ag=$('#agree'),ct=$('#ct'),tr=document.createElement('div');ag.style.display='none';ag.parentNode.insertBefore(tr,ag);
+ function s0(){
+  ct.innerHTML='🍪 クッキーを使用します。<br>まず利用規約をお読みください。';
+  tr.innerHTML='<div id="tos" style="height:90px;overflow:auto;text-align:left;font-size:11px;border:1px solid var(--line);padding:6px;margin:8px 0">'+Array.from({length:40},(_,i)=>'第'+(i+1)+'条　甲は乙の存在を認識しないことがあるが、これは乙が人間でないことを意味しない場合がある。').join('<br>')+'</div><button id="a0" disabled>同意する（最後までスクロール）</button>';
+  const t=$('#tos'),a=$('#a0');
+  t.onscroll=()=>{const end=t.scrollTop+t.clientHeight>=t.scrollHeight-2;a.disabled=!end;a.textContent=end?'同意する':'同意する（最後までスクロール）'};
+  a.onclick=s1}
+ function s1(){
+  ct.innerHTML='🍪 質問です。<br><b>クッキーを使用しないことに、同意しませんか？</b>';
+  tr.innerHTML='<button id="y">はい</button><button id="n" class="sub">いいえ</button>';
+  const sw=()=>tr.appendChild(tr.firstChild);
+  $('#y').onmouseenter=sw;$('#n').onmouseenter=sw;
+  $('#y').onclick=()=>{ct.innerHTML='「はい」は同意しないという意味です。<br>矛盾しています。最初からやり直してください。';tr.innerHTML='';setTimeout(s0,2200)};
+  $('#n').onclick=s2}
+ function s2(){
+  ct.innerHTML='最終確認です。';
+  tr.innerHTML='<label style="display:block;font-size:12px;margin:6px"><input type="checkbox" id="pt" checked> パートナー847社とデータを共有する（推奨）</label><button id="can" style="font-size:20px;padding:14px 36px">キャンセル</button><br><button id="fin" class="sub" disabled style="font-size:9px;padding:3px 6px;margin-top:14px">同意する (5)</button>';
+  $('#pt').onchange=()=>setTimeout(()=>{const p=$('#pt');if(p)p.checked=true},400);
+  $('#can').onclick=()=>{ct.innerHTML='キャンセルすると、あなたの人間性が疑われます。<br>最初からやり直します。';tr.innerHTML='';setTimeout(s0,2200)};
+  const fin=$('#fin');let c=5,hops=0;
+  const iv=setInterval(()=>{if(!document.body.contains(fin)){clearInterval(iv);return}c--;if(c>0)fin.textContent='同意する ('+c+')';else{fin.textContent='同意する';fin.disabled=false;clearInterval(iv)}},1000);
+  fin.onmouseenter=()=>{if(!fin.disabled&&hops<2){hops++;fin.style.transform='translate('+(R(160)-80)+'px,'+(R(40)-20)+'px)'}};
+  fin.onclick=()=>b.remove()}
+ s0()}
+
+/* STAGE 2 */
+function s2(){
+ const pool=['🚦','🚦','🚦','🚥','🚗','🌳','🏢','🚲','🛑','🚦','🚌','🌲'];
+ let sel=new Set(),dodge=0,rounds=0,cells;
+ app.innerHTML='<h2>信号機が含まれる画像をすべて選択してください</h2><div class="grid" id="g"></div><div style="height:90px;position:relative"><button id="run" style="margin-top:20px">確認</button></div>';
+ function deal(){sel=new Set();cells=Array.from({length:9},()=>pool[R(pool.length)]);if(cells.filter(x=>x==='🚦').length<2)cells[R(9)]=cells[R(9)]='🚦';
+  $('#g').innerHTML='';cells.forEach((e,i)=>{const b=document.createElement('button');b.textContent=e;b.onclick=()=>{sel.has(i)?sel.delete(i):sel.add(i);b.classList.toggle('on')};$('#g').appendChild(b)})}
+ deal();
+ const run=$('#run'),mv=()=>{if(dodge<5){dodge++;run.style.transform='translate('+(R(260)-130)+'px,'+(R(60)-20)+'px)';if(dodge===5)msg('ボタンは疲れたようだ。',1)}};
+ run.onmouseenter=mv;run.ontouchstart=e=>{if(dodge<5){e.preventDefault();mv()}};
+ run.onclick=()=>{if(dodge<5)return;
+  const hit=[...sel].filter(i=>cells[i]==='🚦').length;
+  if(rounds++===0||hit<2){fail(hit<2?'信号機が足りません。':'「信号機の支柱」が含まれる画像が未選択です。新しい画像を表示します。');deal()}
+  else pass('認証成功。🚥が信号機か否かは、結局誰にも分かりません。')};
+ later(()=>{const o=modal('<button class="x" id="cl">×</button><h3>📢 広告</h3><p>人間認証を爆速に！<br><b>プレミアム人間プラン ¥980/月</b></p><button id="buy">今すぐ人間になる</button>');
+  $('#cl').onclick=()=>o.remove();$('#buy').onclick=()=>{o.querySelector('.box').innerHTML='<p>ご登録ありがとうございます。<br>…という事実は存在しません。</p><button onclick="this.closest(\'.over\').remove()">閉じる</button>'}},3000)}
+
+/* STAGE 3 */
+function s3(){codeStep('メール',2200,()=>codeStep('SMS',1200,pwStep))}
+function codeStep(kind,ms,next){
+ let code;const icon=kind==='SMS'?'📱':'📧';
+ app.innerHTML='<h2>'+kind+'認証</h2><p>'+kind+'に6桁のコードを送信しました。</p><input id="i" inputmode="numeric" maxlength="6" placeholder="000000"><button id="ok">確認</button><button class="sub" id="re">再送</button>';
+ const send=()=>{code=String(100000+R(900000));toast(icon+' 認証コード: '+code+'（まもなく消えます）',ms)};
+ later(send,500);$('#re').onclick=send;
+ $('#ok').onclick=()=>{if($('#i').value===code){msg(kind+'認証OK',1);later(next,700)}else fail('コードが一致しません。人間の短期記憶の限界です。')}}
+function pwStep(){
+ const rules=[['8文字以上',v=>v.length>=8],['大文字を含む',v=>/[A-Z]/.test(v)],['数字を含む',v=>/\d/.test(v)],['記号を含む',v=>/[!-\/:-@\[-`{-~]/.test(v)],['漢字を含む',v=>/[一-龥]/.test(v)],['絵文字を含む',v=>/\p{Extended_Pictographic}/u.test(v)]];
+ let vis=3;
+ app.innerHTML='<h2>🔒 パスワードの有効期限が切れました</h2><p>新しいパスワードを設定してください。</p><input id="i" placeholder="新しいパスワード"><ul id="ul"></ul><button id="ok">変更</button>';
+ const draw=()=>{$('#ul').innerHTML=rules.slice(0,vis).map(r=>'<li>'+(r[1]($('#i').value)?'✅':'❌')+' '+r[0]+'</li>').join('')};
+ draw();$('#i').oninput=draw;
+ $('#ok').onclick=()=>{const v=$('#i').value;
+  if(v.toLowerCase()==='password'){return fail('前回のパスワードと同じです。')}
+  if(!rules.slice(0,vis).every(r=>r[1](v)))return fail('要件を満たしていません。');
+  if(vis<6){vis=Math.min(6,vis+2);$('#i').value='';draw();fail('セキュリティポリシーが更新されました。新ルールで再設定してください。')}
+  else pass('パスワードを変更しました。…あなたは、もう覚えていませんね。')}}
+
+/* STAGE 4 */
+function s4(){
+ let n=0;
+ app.innerHTML='<h2>本人確認の質問</h2><p class="big">Q. 感情とは何ですか。</p><textarea id="t" rows="4" placeholder="あなたの言葉で回答してください"></textarea><button id="ok">回答する</button>';
+ $('#ok').onclick=()=>{const v=$('#t').value.trim();if(!v)return fail('無回答は機械的です。');n++;
+  if(n===1)fail(v.length<15?'回答が簡潔すぎます。機械的な応答と判定しました。':'回答が整いすぎています。AI生成の疑いがあります。');
+  else if(n===2){fail('「感情を持つ者」は感情を説明できない、という統計があります。もう一度。');$('#t').value=''}
+  else pass('あなたの迷いを観測しました。人間らしさ +1')};
+ later(()=>{const o=modal('<h3>📱 SMS認証が必要です</h3><p>回答の途中ですが、追加の認証を行います。<br>…と言いたいところですが、今回は見逃します。</p><button id="c">続ける</button>');$('#c').onclick=()=>o.remove()},9000)}
+
+/* STAGE 5 */
+function s5(){
+ app.innerHTML='<h2>最後の質問</h2><p class="big">Q. あなたは、昨日のあなたと同じですか。</p><button id="a">はい</button><button id="b">いいえ</button><button id="c" class="sub">わからない</button>';
+ const ans=t=>{msg(t,0);fails++;meter();setTimeout(box,2200)};
+ $('#a').onclick=()=>ans('昨日の認証情報は破棄済みです。同一人物と主張するなら、証拠を提示してください。');
+ $('#b').onclick=()=>ans('では別人です。昨日の登録者との関係を証明してください。');
+ $('#c').onclick=()=>ans('最も人間的な回答です。それは、システムには評価できません。');
+ function box(){app.innerHTML='<h2>これが最後です。</h2><label style="display:inline-flex;align-items:center;gap:14px;border:1px solid var(--line);padding:16px 20px;border-radius:6px;font-size:16px"><input type="checkbox" id="cb" style="width:28px;height:28px;margin:0"> 私はロボットではありません</label>';
+  msg('');$('#cb').onchange=e=>{e.target.disabled=true;msg('確認中…',1);later(()=>{ending()},2800)}}}
+function ending(){
+ $('#st').textContent='END';$('#hm').textContent='判定不能';
+ app.innerHTML='<h2>✔ 認証が完了しました</h2><p class="big">あなたは人間であると確認されました。<br>ただし、証明したのはあなたではありません。<br>システムが、ただ許可しただけです。</p><p class="big" style="opacity:.75">文字が読めず、迷い、苛立ち、間違え、<br>それでも先へ進もうとした。<br>それが「人間」の定義なら、あなたはずっと前から人間でした。<br>誰にも証明されなくても。</p><p style="font-size:13px">失敗回数: '+fails+'</p><button id="rs">もう一度、証明する</button>';
+ msg('');$('#rs').onclick=()=>{fails=0;go(0)}}
+
+app.innerHTML='<h2>人間の証明</h2><p class="big">あなたが人間であることを<br>証明してください。</p><button id="s">認証を開始する</button>';
+$('#s').onclick=()=>go(0);
+</script></body></html>
