@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>星座数独</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #dce8fb;
+  --bg2: #c3d5f4;
+  --panel: #ffffff;
+  --panel2: #eef3fd;
+  --given: #dfe8fa;
+  --line: #aebfe3;
+  --grid: #55639a;
+  --text: #16204a;
+  --muted: #55639a;
+  --accent: #f2a900;
+  --accent-ink: #2a1d00;
+  --ok: #138a7c;
+  --bad: #d6454b;
+  --badbg: #fbd9db;
+  --peer: #e6eefc;
+  --same: #ffe9a8;
+  --sel: #ffd66b;
+  --shadow: rgba(22, 32, 74, .3);
+  --star: rgba(255, 255, 255, 0);
+  --c1: #d6336c;
+  --c2: #c98a00;
+  --c3: #139c8a;
+  --c4: #3b6fd8;
+  --c5: #d9481f;
+  --c6: #7a4dd8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1737;
+    --bg2: #080d22;
+    --panel: #1b2650;
+    --panel2: #141d42;
+    --given: #26346a;
+    --line: #34416f;
+    --grid: #8a97c9;
+    --text: #eef1fb;
+    --muted: #a3aed6;
+    --accent: #ffd35a;
+    --accent-ink: #2a1d00;
+    --ok: #62d6c6;
+    --bad: #ff7a80;
+    --badbg: #5a2740;
+    --peer: #223062;
+    --same: #5b5230;
+    --sel: #6a5a1c;
+    --shadow: rgba(0, 0, 0, .55);
+    --star: rgba(255, 255, 255, .75);
+    --c1: #ff8fab;
+    --c2: #ffd35a;
+    --c3: #62d6c6;
+    --c4: #8ab4ff;
+    --c5: #ff9a6e;
+    --c6: #c3a6ff;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1737;
+  --bg2: #080d22;
+  --panel: #1b2650;
+  --panel2: #141d42;
+  --given: #26346a;
+  --line: #34416f;
+  --grid: #8a97c9;
+  --text: #eef1fb;
+  --muted: #a3aed6;
+  --accent: #ffd35a;
+  --accent-ink: #2a1d00;
+  --ok: #62d6c6;
+  --bad: #ff7a80;
+  --badbg: #5a2740;
+  --peer: #223062;
+  --same: #5b5230;
+  --sel: #6a5a1c;
+  --shadow: rgba(0, 0, 0, .55);
+  --star: rgba(255, 255, 255, .75);
+  --c1: #ff8fab;
+  --c2: #ffd35a;
+  --c3: #62d6c6;
+  --c4: #8ab4ff;
+  --c5: #ff9a6e;
+  --c6: #c3a6ff;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  font-weight: 500;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  background-attachment: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 14%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 22% 66%, var(--star), transparent),
+    radial-gradient(1.8px 1.8px at 35% 28%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 51% 82%, var(--star), transparent),
+    radial-gradient(1.6px 1.6px at 63% 12%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 77% 58%, var(--star), transparent),
+    radial-gradient(1.8px 1.8px at 90% 30%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 94% 88%, var(--star), transparent);
+}
+button { font: inherit; color: inherit; touch-action: manipulation; }
+.app { position: relative; max-width: 560px; margin: 0 auto; padding: 12px 14px 32px; }
+.mascot { flex: none; display: block; }
+.mascot.sm { width: 44px; height: 44px; }
+.mascot.xl { width: 100px; height: 100px; }
+.mc-ring { fill: none; stroke: var(--ok); stroke-width: 7; stroke-linecap: round; }
+.mc-body { fill: var(--accent); }
+.mc-eye { fill: #2a1d00; }
+.mc-mouth { fill: none; stroke: #2a1d00; stroke-width: 3.2; stroke-linecap: round; }
+.mc-cheek { fill: #ff8f8f; opacity: .65; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand h1 { margin: 0; font-size: clamp(1.15rem, 4vw, 1.5rem); font-weight: 900; line-height: 1.2; }
+.brand p { margin: 2px 0 0; font-size: .76rem; color: var(--muted); }
+.hud { display: flex; gap: 14px; flex: none; }
+.stat { text-align: right; line-height: 1.2; }
+.stat .k { display: block; font-size: .7rem; color: var(--muted); }
+.stat .v { font-size: 1.15rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+
+.board {
+  width: min(100%, 440px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  border: 3px solid var(--grid);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--panel);
+  box-shadow: 0 10px 28px var(--shadow);
+}
+.cell {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  cursor: pointer;
+  font-size: 1.7rem;
+  font-weight: 900;
+  min-width: 0;
+}
+.cell.br { border-right: 3px solid var(--grid); }
+.cell.bb { border-bottom: 3px solid var(--grid); }
+.cell.c5 { border-right: 0; }
+.cell.r5 { border-bottom: 0; }
+.cell.given { background: var(--given); cursor: default; }
+.cell.peer { background: var(--peer); }
+.cell.given.peer { background: color-mix(in srgb, var(--given) 70%, var(--peer)); }
+.cell.same { background: var(--same); }
+.cell.sel { background: var(--sel); }
+.cell.bad { background: var(--badbg); }
+.cell.hint::after {
+  content: ""; position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 1.5px var(--panel);
+}
+.cell:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; z-index: 1; }
+.cell svg { width: 78%; height: 78%; display: block; pointer-events: none; }
+.cell .num { pointer-events: none; }
+.cx { color: inherit; }
+
+.palette { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px auto 0; width: min(100%, 440px); }
+.pal {
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  min-height: 92px;
+  padding: 6px 4px 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: center;
+}
+.pal svg, .pal .num { width: 42px; height: 42px; flex: none; }
+.pal .nm { font-size: .74rem; font-weight: 700; line-height: 1.25; white-space: nowrap; }
+.pal .left { font-size: .68rem; font-weight: 900; color: var(--muted); }
+.pal[disabled] { opacity: .38; cursor: default; }
+.pal:hover:not([disabled]) { border-color: var(--grid); }
+.pal:focus-visible, .btn:focus-visible, .lvl:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 14px auto 0; width: min(100%, 440px); }
+.btn {
+  font-weight: 700; font-size: .88rem; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 999px; padding: .45em 1em; min-height: 44px; cursor: pointer;
+}
+.btn:hover:not([disabled]) { border-color: var(--grid); }
+.btn[disabled] { opacity: .45; cursor: default; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.msgline { text-align: center; min-height: 1.6em; margin: 10px 0 0; color: var(--muted); font-size: .9rem; }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center;
+  padding: 14px; background: color-mix(in srgb, var(--bg2) 82%, transparent);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); overflow-y: auto;
+}
+.overlay[hidden] { display: none; }
+.sheet {
+  width: min(560px, 100%); max-height: 100%; overflow-y: auto; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 22px; padding: 20px 20px 18px; box-shadow: 0 14px 40px var(--shadow);
+}
+.sheet h2 { margin: 0; font-size: 1.4rem; font-weight: 900; line-height: 1.3; }
+.sheet .head { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.sheet p { margin: 0 0 12px; line-height: 1.8; }
+.sheet .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.rules { margin: 0 0 14px; padding-left: 1.2em; line-height: 1.8; color: var(--muted); font-size: .9rem; }
+.lvls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.lvl {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  background: color-mix(in srgb, var(--accent) 16%, var(--panel)); border: 2px solid var(--accent);
+  border-radius: 16px; padding: 12px 6px; cursor: pointer;
+}
+.lvl b { font-size: 1.05rem; font-weight: 900; }
+.lvl span { font-size: .78rem; color: var(--muted); }
+.lvl em { font-style: normal; font-size: .72rem; color: var(--muted); min-height: 1.1em; }
+.lvl:hover { background: var(--accent); color: var(--accent-ink); }
+.lvl:hover span, .lvl:hover em { color: var(--accent-ink); }
+.resume { margin-top: 12px; text-align: center; }
+.resume[hidden] { display: none; }
+.zukan { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 8px; }
+.zukan li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); }
+.zukan svg { width: 46px; height: 46px; flex: none; }
+.zukan b { display: block; }
+.zukan span { font-size: .85rem; color: var(--muted); line-height: 1.55; }
+.stars { font-size: 1.7rem; letter-spacing: .15em; color: var(--accent); }
+.meta { color: var(--muted); font-size: .92rem; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(20px); max-width: 90vw;
+  background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: .9rem;
+  opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 9500;
+}
+.toast.show { opacity: 1; transform: translateX(-50%); }
+.board.done .cell { animation: twinkle 1.2s ease-out 1; }
+@keyframes twinkle { 0% { filter: brightness(1.8); } 100% { filter: none; } }
+@media (max-width: 480px) { .lvls { grid-template-columns: 1fr; } .lvl { flex-direction: row; justify-content: space-between; padding: 12px 18px; } }
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } .board.done .cell { animation: none; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- ぷらねっと君（仮イラスト）。本物のマスコット画像に差し替えてください -->
+    <symbol id="mascot" viewBox="0 0 120 120">
+      <ellipse class="mc-ring" cx="60" cy="66" rx="52" ry="15" transform="rotate(-16 60 66)"/>
+      <circle class="mc-body" cx="60" cy="60" r="35"/>
+      <circle class="mc-eye" cx="48" cy="56" r="4.6"/>
+      <circle class="mc-eye" cx="72" cy="56" r="4.6"/>
+      <ellipse class="mc-cheek" cx="41" cy="68" rx="6" ry="4"/>
+      <ellipse class="mc-cheek" cx="79" cy="68" rx="6" ry="4"/>
+      <path class="mc-mouth" d="M52 68 Q60 77 68 68"/>
+      <path class="mc-ring" d="M9 66 A52 15 0 0 0 111 66" transform="rotate(-16 60 66)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="mascot sm" aria-hidden="true"><use href="#mascot"/></svg>
+      <div>
+        <h1>星座数独</h1>
+        <p>6つの星座を、たて・よこ・ブロックに1つずつ</p>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="stat"><span class="k">時間</span><span class="v" id="time">0:00</span></div>
+      <div class="stat"><span class="k">のこり</span><span class="v" id="left">0</span></div>
+    </div>
+  </header>
+
+  <section class="board" id="board" role="grid" aria-label="星座数独の盤面"></section>
+  <p class="msgline" id="msg" aria-live="polite"></p>
+  <div class="palette" id="palette"></div>
+  <div class="tools">
+    <button class="btn" id="btnErase" type="button">消す</button>
+    <button class="btn" id="btnUndo" type="button">ひとつ戻す</button>
+    <button class="btn" id="btnHint" type="button">ヒント</button>
+    <button class="btn" id="btnMode" type="button">表示：星座</button>
+    <button class="btn" id="btnNew" type="button">新しいゲーム</button>
+  </div>
+</main>
+
+<div class="overlay" id="intro">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="head">
+      <svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg>
+      <h2 id="introTitle">星座数独</h2>
+    </div>
+    <p>数字のかわりに、6つの星座を並べる数独だよ。星空をぜんぶ埋めて完成させよう！</p>
+    <ul class="rules">
+      <li>6×6のマスに、6つの星座を入れよう。</li>
+      <li>同じ星座は、たて・よこ・太線で囲まれた6マスのブロックに、1つずつ。</li>
+      <li>マスをタップして、下の星座を選ぶと入るよ。「表示」ボタンで数字にも切りかえられるよ。</li>
+    </ul>
+    <div class="lvls" id="lvlList"></div>
+    <div class="resume" id="resume" hidden><button class="btn" id="btnResume" type="button">いまのパズルに戻る</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="end" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle" id="endSheet"></div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+
+const N = 6, BR = 2, BC = 3;             // 6×6、ブロックは たて2×よこ3
+const FULL = (1 << N) - 1;
+const LEVELS = [
+  { id: 'easy',   label: 'やさしい',   clues: 22, note: 'ヒント多め' },
+  { id: 'normal', label: 'ふつう',     clues: 17, note: 'ふつうの星空' },
+  { id: 'hard',   label: 'むずかしい', clues: 13, note: 'ヒント少なめ' }
+];
+
+/* 星座データ：pts は 0〜100 の座標、edges は星をつなぐ線 */
+const CONS = [
+  { name: 'カシオペヤ座', short: 'カシオペヤ',
+    pts: [[8, 34], [28, 72], [50, 44], [72, 78], [92, 30]], edges: [[0, 1], [1, 2], [2, 3], [3, 4]],
+    fact: '「W」の形をした秋の星座。北極星を見つける目印になるよ。' },
+  { name: '北斗七星', short: '北斗七星',
+    pts: [[10, 32], [8, 62], [38, 68], [40, 40], [60, 36], [78, 42], [94, 28]],
+    edges: [[0, 1], [1, 2], [2, 3], [3, 0], [3, 4], [4, 5], [5, 6]],
+    fact: 'おおぐま座の一部で、7つの星がひしゃくの形にならんでいるよ。' },
+  { name: 'オリオン座', short: 'オリオン',
+    pts: [[28, 10], [74, 14], [38, 50], [50, 47], [62, 44], [26, 90], [76, 86]],
+    edges: [[0, 1], [0, 2], [1, 4], [2, 3], [3, 4], [2, 5], [4, 6]],
+    fact: '冬の夜空の代表選手。まん中にならぶ「三つ星」が目印だよ。' },
+  { name: 'はくちょう座', short: 'はくちょう',
+    pts: [[50, 8], [50, 46], [50, 92], [12, 34], [88, 60]], edges: [[0, 1], [1, 2], [3, 1], [1, 4]],
+    fact: '天の川にそって飛ぶ白鳥。十字の形から「北十字」とも呼ばれるよ。' },
+  { name: 'さそり座', short: 'さそり',
+    pts: [[14, 14], [24, 30], [34, 48], [44, 64], [58, 78], [74, 82], [88, 68], [84, 48]],
+    edges: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7]],
+    fact: '夏の南の空に見える星座。赤く光る1等星アンタレスが心臓だよ。' },
+  { name: '夏の大三角', short: '夏の大三角',
+    pts: [[20, 22], [80, 34], [44, 84]], edges: [[0, 1], [1, 2], [2, 0]],
+    fact: 'ベガ・アルタイル・デネブの3つの1等星を結んだ、夏の目印の三角形だよ。' }
+];
+function iconSVG(i) {
+  const c = CONS[i];
+  const lines = c.edges.map(([a, b]) => `<line x1="${c.pts[a][0]}" y1="${c.pts[a][1]}" x2="${c.pts[b][0]}" y2="${c.pts[b][1]}"/>`).join('');
+  const r = c.pts.length === 3 ? 8 : 6;
+  const dots = c.pts.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join('');
+  return `<svg viewBox="0 0 100 100" aria-hidden="true" style="color:var(--c${i + 1})"><g stroke="currentColor" stroke-width="3.5" stroke-linecap="round" opacity=".75">${lines}</g><g fill="currentColor">${dots}</g></svg>`;
+}
+
+const $ = (s) => document.querySelector(s);
+const el = {
+  board: $('#board'), palette: $('#palette'), time: $('#time'), left: $('#left'), msg: $('#msg'),
+  intro: $('#intro'), end: $('#end'), endSheet: $('#endSheet'), lvlList: $('#lvlList'), resume: $('#resume'),
+  toast: $('#toast'), btnErase: $('#btnErase'), btnUndo: $('#btnUndo'), btnHint: $('#btnHint'), btnMode: $('#btnMode')
+};
+let G = null;
+let mode = 'star';    // 'star' = 星座アイコン、'num' = 数字
+let timerId = null;
+let toastTimer = null;
+
+/* ---------- ユーティリティ ---------- */
+const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const rowOf = (i) => Math.floor(i / N);
+const colOf = (i) => i % N;
+const boxOf = (i) => Math.floor(rowOf(i) / BR) * (N / BC) + Math.floor(colOf(i) / BC);
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function toast(msg) {
+  el.toast.textContent = msg;
+  el.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.toast.classList.remove('show'), 2600);
+}
+const bestKey = (lv) => `const-sudoku-best:${lv.id}`;
+function getBest(lv) { try { const v = localStorage.getItem(bestKey(lv)); return v ? Number(v) : null; } catch (e) { return null; } }
+function setBest(lv, s) { try { localStorage.setItem(bestKey(lv), String(s)); } catch (e) { /* 保存できなくても続行 */ } }
+
+/* ---------- 盤面の生成（解が1つだけになるように作る） ---------- */
+const popcount = (m) => { let c = 0; while (m) { m &= m - 1; c++; } return c; };
+function solver(g, limit, randomize) {
+  const rows = new Array(N).fill(0), cols = new Array(N).fill(0), boxes = new Array(N).fill(0);
+  for (let i = 0; i < N * N; i++) if (g[i]) { const b = 1 << (g[i] - 1); rows[rowOf(i)] |= b; cols[colOf(i)] |= b; boxes[boxOf(i)] |= b; }
+  let count = 0, firstSolution = null;
+  (function rec() {
+    let best = -1, bestAvail = 0, bestCnt = 99;
+    for (let i = 0; i < N * N; i++) {
+      if (g[i]) continue;
+      const avail = FULL & ~(rows[rowOf(i)] | cols[colOf(i)] | boxes[boxOf(i)]);
+      const cnt = popcount(avail);
+      if (cnt === 0) return;
+      if (cnt < bestCnt) { best = i; bestAvail = avail; bestCnt = cnt; if (cnt === 1) break; }
+    }
+    if (best < 0) { count++; if (!firstSolution) firstSolution = g.slice(); return; }
+    const vals = [];
+    for (let v = 1; v <= N; v++) if (bestAvail & (1 << (v - 1))) vals.push(v);
+    if (randomize) shuffle(vals);
+    const r = rowOf(best), c = colOf(best), b = boxOf(best);
+    for (const v of vals) {
+      const bit = 1 << (v - 1);
+      g[best] = v; rows[r] |= bit; cols[c] |= bit; boxes[b] |= bit;
+      rec();
+      g[best] = 0; rows[r] &= ~bit; cols[c] &= ~bit; boxes[b] &= ~bit;
+      if (count >= limit) return;
+    }
+  })();
+  return { count, solution: firstSolution };
+}
+function makePuzzle(targetClues) {
+  const solution = solver(new Array(N * N).fill(0), 1, true).solution;
+  const puz = solution.slice();
+  let clues = N * N;
+  for (const i of shuffle([...Array(N * N).keys()])) {
+    if (clues <= targetClues) break;
+    const keep = puz[i];
+    puz[i] = 0;
+    if (solver(puz.slice(), 2, false).count !== 1) puz[i] = keep; else clues--;
+  }
+  return { puz, solution, clues };
+}
+
+/* ---------- 画面 ---------- */
+function buildBoard() {
+  el.board.textContent = '';
+  for (let i = 0; i < N * N; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cell';
+    b.dataset.i = i;
+    b.setAttribute('role', 'gridcell');
+    const r = rowOf(i), c = colOf(i);
+    if (c % BC === BC - 1 && c !== N - 1) b.classList.add('br');
+    if (r % BR === BR - 1 && r !== N - 1) b.classList.add('bb');
+    if (c === N - 1) b.classList.add('c5');
+    if (r === N - 1) b.classList.add('r5');
+    b.addEventListener('click', () => select(i));
+    el.board.appendChild(b);
+  }
+}
+function buildPalette() {
+  el.palette.textContent = '';
+  CONS.forEach((c, k) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pal';
+    b.dataset.v = k + 1;
+    b.innerHTML = `${mode === 'star' ? iconSVG(k) : `<span class="num" style="font-size:1.7rem;font-weight:900;text-align:center;line-height:42px;color:var(--c${k + 1})">${k + 1}</span>`}<span class="nm"></span><span class="left"></span>`;
+    b.querySelector('.nm').textContent = c.short;
+    b.setAttribute('aria-label', `${c.name}（${k + 1}）を入れる`);
+    b.addEventListener('click', () => place(k + 1));
+    el.palette.appendChild(b);
+  });
+}
+function conflicts() {
+  const bad = new Set();
+  const groups = [];
+  for (let k = 0; k < N; k++) {
+    groups.push([...Array(N).keys()].map((c) => k * N + c));
+    groups.push([...Array(N).keys()].map((r) => r * N + k));
+    groups.push([...Array(N * N).keys()].filter((i) => boxOf(i) === k));
+  }
+  for (const grp of groups) {
+    const seen = {};
+    for (const i of grp) {
+      const v = G.grid[i];
+      if (!v) continue;
+      (seen[v] = seen[v] || []).push(i);
+    }
+    for (const v in seen) if (seen[v].length > 1) seen[v].forEach((i) => bad.add(i));
+  }
+  return bad;
+}
+function render() {
+  const bad = conflicts();
+  const sel = G.sel;
+  const selV = sel >= 0 ? G.grid[sel] : 0;
+  const cells = el.board.children;
+  for (let i = 0; i < N * N; i++) {
+    const cell = cells[i], v = G.grid[i];
+    const isPeer = sel >= 0 && i !== sel && (rowOf(i) === rowOf(sel) || colOf(i) === colOf(sel) || boxOf(i) === boxOf(sel));
+    cell.classList.toggle('given', G.given[i]);
+    cell.classList.toggle('sel', i === sel);
+    cell.classList.toggle('peer', isPeer && !(selV && v === selV));
+    cell.classList.toggle('same', !!selV && v === selV && i !== sel);
+    cell.classList.toggle('bad', bad.has(i));
+    cell.classList.toggle('hint', !!G.hinted[i]);
+    const label = v ? CONS[v - 1].name : '空き';
+    cell.setAttribute('aria-label', `${rowOf(i) + 1}行${colOf(i) + 1}列 ${label}${G.given[i] ? '（最初から入っている）' : ''}`);
+    const html = v ? (mode === 'star' ? iconSVG(v - 1) : `<span class="num" style="color:var(--c${v})">${v}</span>`) : '';
+    if (cell.dataset.v !== `${v}|${mode}`) { cell.innerHTML = html; cell.dataset.v = `${v}|${mode}`; }
+  }
+  // パレットの残り数
+  const used = new Array(N + 1).fill(0);
+  G.grid.forEach((v) => { if (v) used[v]++; });
+  for (const b of el.palette.children) {
+    const v = Number(b.dataset.v);
+    const left = Math.max(0, N - used[v]);
+    b.querySelector('.left').textContent = `あと${left}`;
+    b.disabled = left === 0 && !(sel >= 0 && G.grid[sel] === v);
+  }
+  const empty = G.grid.filter((v) => !v).length;
+  el.left.textContent = empty;
+  el.btnUndo.disabled = G.history.length === 0;
+  el.btnErase.disabled = sel < 0 || G.given[sel] || !G.grid[sel];
+}
+function select(i) {
+  if (!G || G.done) return;
+  G.sel = i;
+  render();
+}
+function setCell(i, v, record = true) {
+  if (record) G.history.push({ i, prev: G.grid[i], hinted: G.hinted[i] });
+  G.grid[i] = v;
+  render();
+  if (v) checkWin();
+}
+function place(v) {
+  if (!G || G.done || G.sel < 0) { el.msg.textContent = 'まず、星座を入れるマスをタップしてね。'; return; }
+  const i = G.sel;
+  if (G.given[i]) { el.msg.textContent = 'ここは最初から入っているマスだよ。'; return; }
+  if (G.grid[i] === v) return;
+  el.msg.textContent = '';
+  startTimer();
+  setCell(i, v);
+  const bad = conflicts();
+  if (bad.has(i)) el.msg.textContent = 'おっと、同じ星座がかさなっているよ（赤いマス）。';
+}
+function erase() {
+  if (!G || G.done || G.sel < 0 || G.given[G.sel] || !G.grid[G.sel]) return;
+  setCell(G.sel, 0);
+  el.msg.textContent = '';
+}
+function undo() {
+  if (!G || G.done || !G.history.length) return;
+  const h = G.history.pop();
+  G.grid[h.i] = h.prev;
+  G.hinted[h.i] = h.hinted;
+  G.sel = h.i;
+  el.msg.textContent = '';
+  render();
+}
+function hint() {
+  if (!G || G.done) return;
+  let i = G.sel;
+  if (i < 0 || G.given[i] || G.grid[i] === G.solution[i]) {
+    const cand = [];
+    for (let k = 0; k < N * N; k++) if (G.grid[k] !== G.solution[k]) cand.push(k);
+    if (!cand.length) return;
+    i = cand[Math.floor(Math.random() * cand.length)];
+  }
+  startTimer();
+  G.hints++;
+  G.hinted[i] = true;
+  G.sel = i;
+  setCell(i, G.solution[i]);
+  el.msg.textContent = `ヒント：ここは「${CONS[G.solution[i] - 1].name}」だよ。`;
+}
+
+/* ---------- 時間・クリア ---------- */
+const now = () => performance.now();
+function elapsed() { return G ? G.elapsed + (G.running ? now() - G.tick : 0) : 0; }
+function renderTime() { el.time.textContent = fmt(Math.floor(elapsed() / 1000)); }
+function startTimer() {
+  if (!G || G.running || G.done) return;
+  G.running = true; G.tick = now();
+  if (!timerId) timerId = setInterval(renderTime, 500);
+}
+function pauseTimer() { if (G && G.running) { G.elapsed = elapsed(); G.running = false; } }
+function checkWin() {
+  if (G.grid.some((v) => !v)) return;
+  if (conflicts().size) { el.msg.textContent = 'すべて埋まったけれど、どこかに同じ星座がかさなっているよ。'; return; }
+  win();
+}
+function win() {
+  pauseTimer();
+  G.done = true; G.sel = -1;
+  clearInterval(timerId); timerId = null;
+  render(); renderTime();
+  el.board.classList.add('done');
+  const secs = Math.round(G.elapsed / 1000);
+  const prev = getBest(G.level);
+  const isBest = prev === null || secs < prev;
+  if (isBest && G.hints === 0) setBest(G.level, secs);
+  const stars = G.hints === 0 ? 3 : (G.hints <= 2 ? 2 : 1);
+  G.result = { secs, stars };
+  el.endSheet.innerHTML = `
+    <div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2 id="endTitle">星空が完成！</h2></div>
+    <p>6つの星座が、ぜんぶそろったよ。おめでとう！</p>
+    <div class="stars" aria-label="星${stars}つ">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+    <p class="meta">${G.level.label} ／ ${fmt(secs)} ／ ヒント ${G.hints}回${isBest && G.hints === 0 && prev !== null ? '　ベスト更新！' : ''}</p>
+    <h3 style="margin:14px 0 0;font-size:1rem">星座ずかん</h3>
+    <ul class="zukan">${CONS.map((c, k) => `<li>${iconSVG(k)}<div><b>${c.name}</b><span>${c.fact}</span></div></li>`).join('')}</ul>
+    <div class="row"><button class="btn primary" id="eShare" type="button">結果をシェア</button><button class="btn" id="eAgain" type="button">もう一度あそぶ</button><button class="btn" id="eLevel" type="button">レベルを選ぶ</button></div>`;
+  $('#eShare').addEventListener('click', share);
+  $('#eAgain').addEventListener('click', () => { startGame(G.level); });
+  $('#eLevel').addEventListener('click', () => { el.end.hidden = true; showIntro(); });
+  setTimeout(() => { el.end.hidden = false; }, 900);
+}
+async function share() {
+  const r = G.result;
+  const text = `「星座数独」（${G.level.label}）を${fmt(r.secs)}でクリア！（${'★'.repeat(r.stars)}${'☆'.repeat(3 - r.stars)}、ヒント${G.hints}回）`;
+  try { if (navigator.share) { await navigator.share({ text }); return; } }
+  catch (err) { if (err && err.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); toast('結果をコピーしました'); }
+  catch (err) { toast(text); }
+}
+
+/* ---------- 開始・レベル選択 ---------- */
+function startGame(level) {
+  clearInterval(timerId); timerId = null;
+  const { puz, solution } = makePuzzle(level.clues);
+  G = {
+    level, grid: puz.slice(), solution, given: puz.map((v) => v !== 0), hinted: new Array(N * N).fill(false),
+    history: [], sel: -1, hints: 0, elapsed: 0, running: false, tick: 0, done: false
+  };
+  el.intro.hidden = true; el.end.hidden = true;
+  el.board.classList.remove('done');
+  el.msg.textContent = 'マスをタップして、下の星座を選ぼう。';
+  buildPalette();
+  render(); renderTime();
+}
+function buildLevels() {
+  el.lvlList.textContent = '';
+  for (const lv of LEVELS) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'lvl';
+    b.innerHTML = '<b></b><span></span><em></em>';
+    b.children[0].textContent = lv.label;
+    b.children[1].textContent = lv.note;
+    const best = getBest(lv);
+    b.children[2].textContent = best !== null ? `ベスト ${fmt(best)}` : '';
+    b.addEventListener('click', () => startGame(lv));
+    el.lvlList.appendChild(b);
+  }
+}
+function showIntro() {
+  pauseTimer();
+  buildLevels();
+  el.resume.hidden = !(G && !G.done);
+  el.intro.hidden = false;
+}
+
+$('#btnResume').addEventListener('click', () => { el.intro.hidden = true; if (G && G.elapsed > 0) startTimer(); });
+$('#btnNew').addEventListener('click', showIntro);
+el.btnErase.addEventListener('click', erase);
+el.btnUndo.addEventListener('click', undo);
+el.btnHint.addEventListener('click', hint);
+el.btnMode.addEventListener('click', () => {
+  mode = mode === 'star' ? 'num' : 'star';
+  el.btnMode.textContent = `表示：${mode === 'star' ? '星座' : '数字'}`;
+  buildPalette();
+  if (G) { for (const c of el.board.children) delete c.dataset.v; render(); }
+});
+document.addEventListener('keydown', (e) => {
+  if (!G || G.done || !el.intro.hidden || !el.end.hidden || e.isComposing) return;
+  if (e.key >= '1' && e.key <= '6') { place(Number(e.key)); return; }
+  if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') { erase(); return; }
+  const move = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -N, ArrowDown: N }[e.key];
+  if (move !== undefined) {
+    e.preventDefault();
+    const cur = G.sel < 0 ? 0 : G.sel;
+    let n = cur + move;
+    if ((e.key === 'ArrowLeft' && colOf(cur) === 0) || (e.key === 'ArrowRight' && colOf(cur) === N - 1)) n = cur;
+    if (n < 0 || n >= N * N) n = cur;
+    select(n);
+    el.board.children[n].focus({ preventScroll: true });
+  }
+});
+
+buildBoard();
+buildPalette();
+G = { level: LEVELS[0], grid: new Array(N * N).fill(0), solution: [], given: new Array(N * N).fill(false), hinted: new Array(N * N).fill(false), history: [], sel: -1, hints: 0, elapsed: 0, running: false, tick: 0, done: true };
+render();
+buildLevels();
+})();
+</script>
+</body>
+</html>

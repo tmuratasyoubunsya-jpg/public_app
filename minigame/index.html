@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ぷらねっと君のブラウザゲーム集</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #dce8fb; --bg2: #c3d5f4; --panel: #ffffff; --panel2: #eef3fd; --line: #aebfe3;
+  --text: #16204a; --muted: #55639a; --accent: #f2a900; --accent-ink: #2a1d00; --ok: #138a7c;
+  --shadow: rgba(22, 32, 74, .25);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1737; --bg2: #080d22; --panel: #1b2650; --panel2: #141d42; --line: #34416f;
+    --text: #eef1fb; --muted: #a3aed6; --accent: #ffd35a; --accent-ink: #2a1d00; --ok: #62d6c6;
+    --shadow: rgba(0, 0, 0, .5);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1737; --bg2: #080d22; --panel: #1b2650; --panel2: #141d42; --line: #34416f;
+  --text: #eef1fb; --muted: #a3aed6; --accent: #ffd35a; --accent-ink: #2a1d00; --ok: #62d6c6;
+  --shadow: rgba(0, 0, 0, .5);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-behavior: smooth; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0; color: var(--text); line-height: 1.8;
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(180deg, var(--bg), var(--bg2)); background-attachment: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 20px 16px 48px; }
+header.hero { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+.mascot { width: 84px; height: 84px; flex: none; }
+.mc-ring { fill: none; stroke: var(--ok); stroke-width: 7; stroke-linecap: round; }
+.mc-body { fill: var(--accent); } .mc-eye { fill: #2a1d00; }
+.mc-mouth { fill: none; stroke: #2a1d00; stroke-width: 3.2; stroke-linecap: round; }
+.mc-cheek { fill: #ff8f8f; opacity: .65; }
+h1 { margin: 0; font-size: clamp(1.4rem, 5vw, 2rem); line-height: 1.35; font-weight: 800; }
+.lead { margin: 0 0 6px; color: var(--muted); }
+.note-top {
+  display: inline-block; margin: 6px 0 22px; padding: 6px 14px; border-radius: 999px;
+  background: var(--panel); border: 1px solid var(--line); font-size: .9rem;
+}
+.note-top a { color: inherit; font-weight: 700; }
+h2 { margin: 34px 0 10px; font-size: 1.25rem; font-weight: 800; }
+h3 { margin: 22px 0 6px; font-size: 1.05rem; font-weight: 800; }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.grid a {
+  display: block; height: 100%; padding: 14px 16px; text-decoration: none; color: inherit;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 6px 18px var(--shadow);
+}
+.grid a:hover { border-color: var(--muted); transform: translateY(-1px); }
+.grid a:focus-visible, .note-top a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.tag { display: inline-block; padding: 1px 10px; margin-bottom: 4px; border-radius: 999px; font-size: .72rem; font-weight: 800; background: var(--accent); color: var(--accent-ink); }
+.name { display: block; font-size: 1.05rem; font-weight: 800; line-height: 1.5; }
+.desc { display: block; margin-top: 2px; font-size: .86rem; color: var(--muted); line-height: 1.65; }
+.privacy { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 6px 20px 22px; box-shadow: 0 6px 18px var(--shadow); }
+.privacy p, .privacy li { font-size: .95rem; }
+.privacy ul { margin: 6px 0; padding-left: 1.3em; }
+.summary { margin: 16px 0 4px; padding: 12px 16px; border-radius: 14px; border: 2px solid var(--ok); background: var(--panel2); font-weight: 700; }
+.todo { background: #fff2b8; color: #3a2c00; padding: 0 6px; border-radius: 4px; font-weight: 700; }
+footer { margin-top: 30px; color: var(--muted); font-size: .82rem; text-align: center; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .grid a:hover { transform: none; } }
+</style>
+<script defer src="analytics.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <!-- ぷらねっと君（仮イラスト）。本物のマスコット画像に差し替えてください -->
+  <svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
+    <ellipse class="mc-ring" cx="60" cy="66" rx="52" ry="15" transform="rotate(-16 60 66)"/>
+    <circle class="mc-body" cx="60" cy="60" r="35"/>
+    <circle class="mc-eye" cx="48" cy="56" r="4.6"/><circle class="mc-eye" cx="72" cy="56" r="4.6"/>
+    <ellipse class="mc-cheek" cx="41" cy="68" rx="6" ry="4"/><ellipse class="mc-cheek" cx="79" cy="68" rx="6" ry="4"/>
+    <path class="mc-mouth" d="M52 68 Q60 77 68 68"/>
+    <path class="mc-ring" d="M9 66 A52 15 0 0 0 111 66" transform="rotate(-16 60 66)"/>
+  </svg>
+  <div>
+    <h1>ぷらねっと君の<br>ブラウザゲーム集</h1>
+  </div>
+</header>
+<p class="lead">インストール不要。スマホでもパソコンでも、すぐに遊べるミニゲームです。</p>
+<p class="note-top">このサイトは、<strong>クッキーを使用していません</strong>。<a href="#cookie">くわしくは、こちら</a>　／　<a href="terms.html">利用規約</a></p>
+
+<h2>ゲーム一覧</h2>
+<ul class="grid">
+  <li><a href="pazzle.html"><span class="tag">パズル／アクション</span><span class="name">ぷらねっと君の星空パズル</span><span class="desc">パズルを解いて星座図鑑を解放しよう。</span></a></li>
+  <li><a href="business-quiz.html"><span class="tag">クイズ</span><span class="name">ビジネス用語デイリー5問</span><span class="desc">毎日5問、ビジネスでよく出る用語をおさらい。連続日数もわかります。</span></a></li>
+  <li><a href="security-quiz.html"><span class="tag">クイズ</span><span class="name">情報セキュリティ○×クイズ</span><span class="desc">パスワード、メール、SNS。身近な情報セキュリティを○×で学べます。</span></a></li>
+  <li><a href="spaceship-escape.html"><span class="tag">謎解き</span><span class="name">宇宙船からの脱出</span><span class="desc">10分以内に5つの謎を解いて、脱出ポッドを発進させよう。</span></a></li>
+  <li><a href="constellation-sudoku.html"><span class="tag">パズル</span><span class="name">星座数独</span><span class="desc">数字のかわりに、6つの星座を並べる数独。星座ずかんつき。</span></a></li>
+  <li><a href="slide-puzzle.html"><span class="tag">パズル</span><span class="name">スライドパズル</span><span class="desc">バラバラになった「にこにこ地球」の絵を、タイルをすべらせて完成させよう。</span></a></li>
+  <li><a href="comet-slingshot.html"><span class="tag">パズル／アクション</span><span class="name">彗星スリングショット</span><span class="desc">引っ張って飛ばす彗星を、重力やワープ、反射板を使ってゴールへ。全9ステージ。</span></a></li>
+  <li><a href="planet-jump.html"><span class="tag">アクション</span><span class="name">ぷらねっと君ジャンプ</span><span class="desc">足場をふんで、どこまでも高く。ばねや動く足場もあるよ。</span></a></li>
+  <li><a href="planet-breakout.html"><span class="tag">アクション</span><span class="name">惑星ブロック崩し</span><span class="desc">惑星のブロックを、星のボールではじき飛ばそう。</span></a></li>
+  <li><a href="zero-g-runner.html"><span class="tag">アクション</span><span class="name">無重力ランナー</span><span class="desc">タップで重力を反転して、ステーションの通路を駆け抜けよう。</span></a></li>
+  <li><a href="dial.html"><span class="tag">パズル／アクション</span><span class="name">ぷらねっと君のくるくるダイヤル</span><span class="desc">パネルを回して色を合わせよう。</span></a></li>
+</ul>
+
+<h2 id="cookie">クッキー・保存データについて</h2>
+<section class="privacy" aria-labelledby="cookie">
+  <p class="summary">このサイトは、クッキー（Cookie）を使用していません。</p>
+  <ul>
+    <li><strong>遊んだ記録：</strong>各ゲームは、ベストスコアや進行状況などの記録を、お使いの端末のブラウザ内に保存します。当社のサーバーには送られません。</li>
+    <li><strong>アクセス解析：</strong>見に来た人の数や、どこから来たかなどを集計するために、クッキーを使わない方式（Cloudflare Web Analytics）を使っています。</li>
+    <li><strong>フォント：</strong>画面の表示のために、Googleのフォント配信サービス（Google Fonts）に接続します。</li>
+    <li>広告は、使用していません。</li>
+  </ul>
+  <p>くわしくは、<a href="terms.html#data">利用規約（第4条・第5条）</a>をご覧ください。</p>
+</section>
+
+<footer><a href="terms.html" style="color:inherit">利用規約</a>　／　© <span class="todo">［会社名］</span></footer>
+</div>
+</body>
+</html>

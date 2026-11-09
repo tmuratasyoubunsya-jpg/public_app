@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>利用規約｜ぷらねっと君のブラウザゲーム集</title>
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #dce8fb; --bg2: #c3d5f4; --panel: #ffffff; --panel2: #eef3fd; --line: #aebfe3;
+  --text: #16204a; --muted: #55639a; --accent: #f2a900; --accent-ink: #2a1d00; --ok: #138a7c;
+  --shadow: rgba(22, 32, 74, .25);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1737; --bg2: #080d22; --panel: #1b2650; --panel2: #141d42; --line: #34416f;
+    --text: #eef1fb; --muted: #a3aed6; --accent: #ffd35a; --accent-ink: #2a1d00; --ok: #62d6c6;
+    --shadow: rgba(0, 0, 0, .5);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1737; --bg2: #080d22; --panel: #1b2650; --panel2: #141d42; --line: #34416f;
+  --text: #eef1fb; --muted: #a3aed6; --accent: #ffd35a; --accent-ink: #2a1d00; --ok: #62d6c6;
+  --shadow: rgba(0, 0, 0, .5);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-behavior: smooth; scroll-padding-top: 12px; }
+body {
+  margin: 0; color: var(--text); line-height: 1.9;
+  font-family: "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  background: linear-gradient(180deg, var(--bg), var(--bg2)); background-attachment: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; }
+.back { display: inline-block; margin-bottom: 8px; color: inherit; font-weight: 700; font-size: .92rem; }
+.back:focus-visible, .toc a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+h1 { margin: 6px 0 4px; font-size: clamp(1.4rem, 5vw, 1.9rem); line-height: 1.4; font-weight: 800; }
+.meta { margin: 0 0 18px; color: var(--muted); font-size: .88rem; }
+article { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 8px 22px 26px; box-shadow: 0 6px 18px var(--shadow); }
+article p, article li { font-size: .96rem; }
+h2 { margin: 28px 0 6px; padding-top: 6px; font-size: 1.1rem; font-weight: 800; border-top: 1px dashed var(--line); }
+article > h2:first-of-type { border-top: 0; }
+ol, ul { margin: 6px 0; padding-left: 1.5em; }
+li { margin: 4px 0; }
+.toc { margin: 14px 0 6px; padding: 12px 18px; background: var(--panel2); border: 1px solid var(--line); border-radius: 14px; font-size: .88rem; }
+.toc ol { margin: 0; padding-left: 1.4em; columns: 2; column-gap: 24px; }
+.toc a { color: inherit; }
+.key { margin: 12px 0; padding: 10px 14px; border-radius: 12px; border: 2px solid var(--ok); background: var(--panel2); font-weight: 700; }
+.todo { background: #fff2b8; color: #3a2c00; padding: 0 6px; border-radius: 4px; font-weight: 700; }
+footer { margin-top: 26px; color: var(--muted); font-size: .84rem; text-align: center; }
+footer a { color: inherit; }
+@media (max-width: 520px) { .toc ol { columns: 1; } article { padding: 6px 16px 22px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+<script defer src="analytics.js"></script>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">← ゲーム一覧にもどる</a>
+<h1>利用規約</h1>
+<p class="meta">ぷらねっと君のブラウザゲーム集　／　制定日：<span class="todo">［公開日を記入］</span></p>
+
+<nav class="toc" aria-label="目次">
+  <ol>
+    <li><a href="#a1">適用</a></li>
+    <li><a href="#a2">利用料金・通信費</a></li>
+    <li><a href="#a3">利用環境</a></li>
+    <li><a href="#data">遊んだ記録の保存</a></li>
+    <li><a href="#a5">クッキー・アクセス解析・外部サービス</a></li>
+    <li><a href="#a6">禁止事項</a></li>
+    <li><a href="#a7">知的財産権</a></li>
+    <li><a href="#a8">クイズ・学習内容について</a></li>
+    <li><a href="#a9">変更・中断・終了</a></li>
+    <li><a href="#a10">免責</a></li>
+    <li><a href="#a11">規約の変更</a></li>
+    <li><a href="#a12">お問い合わせ</a></li>
+    <li><a href="#a13">準拠法・管轄</a></li>
+  </ol>
+</nav>
+
+<article>
+<p>この利用規約（以下「本規約」）は、<span class="todo">［会社名］</span>（以下「当社」）が公開する「ぷらねっと君のブラウザゲーム集」（以下「本サービス」）の利用条件を定めるものです。本サービスを利用した時点で、本規約に同意したものとみなします。お子さまが利用する場合は、保護者の方が、本規約の内容をご確認ください。</p>
+
+<h2 id="a1">第1条（適用）</h2>
+<ol>
+  <li>本規約は、本サービスの利用に関わるすべての場合に適用されます。</li>
+  <li>当社が、本サービスの各ページに掲載する注意書きは、本規約の一部となります。</li>
+</ol>
+
+<h2 id="a2">第2条（利用料金・通信費）</h2>
+<ol>
+  <li>本サービスは、無料で利用できます。</li>
+  <li>本サービスの利用にともなう通信料などは、利用者の負担となります。</li>
+</ol>
+
+<h2 id="a3">第3条（利用環境）</h2>
+<ol>
+  <li>本サービスは、一般的なウェブブラウザで遊べることを想定しています。</li>
+  <li>すべての端末やブラウザで、正常に動作することは保証しません。</li>
+</ol>
+
+<h2 id="data">第4条（遊んだ記録の保存）</h2>
+<p class="key">本サービスの各ゲームは、遊んだ記録を、お使いの端末のブラウザ内に保存します。当社のサーバーには送られません。</p>
+<ol>
+  <li>本サービスの各ゲームは、ベストスコア、進行状況、遊んだ日などの記録を、お使いの端末のブラウザ内（ローカルストレージ）に保存します。</li>
+  <li>保存された記録は、利用者の端末にだけ存在し、当社が受け取ったり、保管したりすることはありません。</li>
+  <li>ブラウザの閲覧データを削除したとき、プライベートブラウズ（シークレットモード）を終了したとき、端末やブラウザを変更したときなどは、記録が消えたり、引き継げなかったりします。当社は、記録を復元したり、移行したりすることはできません。</li>
+  <li>記録は、ブラウザの設定にある「閲覧履歴データの削除」（名称はブラウザによって異なります）から、利用者自身で削除できます。</li>
+  <li>本サービスは、氏名、メールアドレス、位置情報など、個人を特定できる情報を保存しません。</li>
+</ol>
+
+<h2 id="a5">第5条（クッキー・アクセス解析・外部サービス）</h2>
+<ol>
+  <li><strong>クッキー：</strong>本サービスは、クッキー（Cookie）を使用しません。</li>
+  <li><strong>アクセス解析：</strong>当社は、利用状況（閲覧数、どこから来たか、国、ブラウザや端末の種類など）を把握するために、Cloudflare社のアクセス解析（Cloudflare Web Analytics）を使用します。この解析は、クッキーや端末への記録の保存を使わず、利用者を個別に追跡する目的では使わないと、Cloudflare社は説明しています。ページを開くと、通信の仕組み上、IPアドレスなどの情報が、Cloudflare社に届きます。取扱いは、Cloudflare社のプライバシーポリシーに従います。ブラウザの「トラッキングしない（Do Not Track）」の設定をオンにしている場合は、計測しません。<span class="todo">［公開前に、Cloudflare社の最新の説明を確認してください］</span></li>
+  <li><strong>フォントの配信：</strong>画面の表示のために、Google社のフォント配信サービス（Google Fonts）に接続します。このとき、IPアドレスやブラウザの情報などが、Google社に送られることがあります。取扱いは、Google社のプライバシーポリシーに従います。ゲームの遊び方や得点などは、送られません。</li>
+  <li><strong>使用しないもの：</strong>広告配信サービス、SNSの共有ボタン、クッキーを使うアクセス解析は、使用していません。</li>
+  <li><strong>「結果をシェア」：</strong>利用者がボタンを押したときだけ、結果の文章を、端末の共有機能にわたすか、クリップボードにコピーします。送り先は、利用者が選びます。当社には、送信されません。</li>
+  <li><strong>公開しているサービス：</strong>本サービスは、GitHub Pages で公開しています。アクセスにともなう記録（ログ）の取扱いは、GitHub社の規約に従います。</li>
+  <li>当社は、上記の内容を変更するときは、このページを更新します。</li>
+</ol>
+
+<h2 id="a6">第6条（禁止事項）</h2>
+<p>利用者は、本サービスの利用にあたり、次の行為をしてはいけません。</p>
+<ol>
+  <li>法令や公序良俗に反する行為</li>
+  <li>当社や第三者の、著作権・商標権・プライバシーなどの権利を侵害する行為</li>
+  <li>本サービスの運営を妨げる行為（過度な自動アクセスなどを含みます）</li>
+  <li>本サービスのファイルやデータを、当社の許可なく、複製・改変・再配布・転載する行為（第7条で認めるものを除きます）</li>
+  <li>本サービスを、営利を目的として、当社に無断で利用する行為</li>
+  <li>そのほか、当社が不適切と判断する行為</li>
+</ol>
+
+<h2 id="a7">第7条（知的財産権）</h2>
+<ol>
+  <li>本サービスの、プログラム、画像、文章、キャラクター「ぷらねっと君」などに関する権利は、当社または正当な権利者に帰属します。</li>
+  <li>本サービスを紹介する目的で、ゲーム画面のスクリーンショットや、遊んだ結果の文章を、個人のSNSなどに投稿することは、妨げません。ただし、権利を侵害する態様や、当社と関係があるとの誤解を与える態様での利用は、できません。<span class="todo">［この扱いは、当社の方針に合わせて決めてください］</span></li>
+</ol>
+
+<h2 id="a8">第8条（クイズ・学習内容について）</h2>
+<ol>
+  <li>本サービスのうち、ビジネス用語のクイズ、情報セキュリティのクイズ、星座数独など、知識や学習の要素を含むものは、一般的な知識を紹介するものです。</li>
+  <li>当社は、これらの内容が、正確であること、最新であること、特定の目的に適合することを保証しません。法律、会計、労務、情報セキュリティなどの専門的な助言ではありません。</li>
+  <li>実際の業務や判断にあたっては、社内の規程や、専門家の助言に従ってください。</li>
+</ol>
+
+<h2 id="a9">第9条（サービスの変更・中断・終了）</h2>
+<p>当社は、利用者への事前の通知なく、本サービスの内容を変更し、または、一部もしくは全部を中断・終了することがあります。これによって利用者に損害が生じても、当社は、第10条の範囲で責任を負います。</p>
+
+<h2 id="a10">第10条（免責）</h2>
+<ol>
+  <li>本サービスは、現状のまま提供するものです。当社は、本サービスに、不具合、エラー、セキュリティ上の欠陥などがないことを保証しません。</li>
+  <li>当社は、第4条に定める記録の消失や、本サービスの利用によって、利用者に生じた損害について、責任を負いません。ただし、当社に故意または重大な過失がある場合は、この限りではありません。</li>
+  <li>利用者と第三者との間で生じた紛争については、利用者が、自らの責任で解決するものとします。</li>
+</ol>
+
+<h2 id="a11">第11条（規約の変更）</h2>
+<p>当社は、必要と判断した場合、本規約を変更することがあります。変更後の本規約は、このページに掲載した時点から、効力を生じます。</p>
+
+<h2 id="a12">第12条（お問い合わせ）</h2>
+<p>本サービスに関するお問い合わせは、次の窓口までお願いします。<br>
+<span class="todo">［会社名］</span>　<span class="todo">［担当部署・連絡先］</span><br>
+お問い合わせでお知らせいただいた情報は、ご返信と対応のためにだけ使用します。</p>
+
+<h2 id="a13">第13条（準拠法・管轄裁判所）</h2>
+<ol>
+  <li>本規約は、日本法に基づいて解釈されます。</li>
+  <li>本サービスに関して紛争が生じた場合は、<span class="todo">［裁判所名］</span>を、第一審の専属的合意管轄裁判所とします。</li>
+</ol>
+
+<p style="margin-top:24px">以上</p>
+</article>
+
+<footer><a href="index.html">ゲーム一覧にもどる</a></footer>
+</div>
+</body>
+</html>

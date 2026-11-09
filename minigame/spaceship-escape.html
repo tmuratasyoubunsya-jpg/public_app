@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>宇宙船からの脱出</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #dce8fb;
+  --bg2: #c3d5f4;
+  --panel: #ffffff;
+  --panel2: #eef3fd;
+  --line: #aebfe3;
+  --text: #16204a;
+  --muted: #55639a;
+  --accent: #f2a900;
+  --accent-ink: #2a1d00;
+  --ok: #1a9e90;
+  --ok-ink: #04211d;
+  --bad: #d6454b;
+  --shadow: rgba(22, 32, 74, .3);
+  --star: rgba(255, 255, 255, 0);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1737;
+    --bg2: #080d22;
+    --panel: #1b2650;
+    --panel2: #141d42;
+    --line: #34416f;
+    --text: #eef1fb;
+    --muted: #a3aed6;
+    --accent: #ffd35a;
+    --accent-ink: #2a1d00;
+    --ok: #62d6c6;
+    --ok-ink: #04211d;
+    --bad: #ff7a80;
+    --shadow: rgba(0, 0, 0, .55);
+    --star: rgba(255, 255, 255, .75);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1737;
+  --bg2: #080d22;
+  --panel: #1b2650;
+  --panel2: #141d42;
+  --line: #34416f;
+  --text: #eef1fb;
+  --muted: #a3aed6;
+  --accent: #ffd35a;
+  --accent-ink: #2a1d00;
+  --ok: #62d6c6;
+  --ok-ink: #04211d;
+  --bad: #ff7a80;
+  --shadow: rgba(0, 0, 0, .55);
+  --star: rgba(255, 255, 255, .75);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  font-weight: 500;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  background-attachment: fixed;
+  -webkit-text-size-adjust: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 8% 14%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 22% 66%, var(--star), transparent),
+    radial-gradient(1.8px 1.8px at 35% 28%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 51% 82%, var(--star), transparent),
+    radial-gradient(1.6px 1.6px at 63% 12%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 77% 58%, var(--star), transparent),
+    radial-gradient(1.8px 1.8px at 90% 30%, var(--star), transparent),
+    radial-gradient(1.2px 1.2px at 94% 88%, var(--star), transparent);
+}
+button { font: inherit; color: inherit; touch-action: manipulation; }
+.app { position: relative; max-width: 760px; margin: 0 auto; padding: 12px 14px 32px; }
+
+/* マスコット（仮イラスト） */
+.mascot { flex: none; display: block; }
+.mascot.sm { width: 44px; height: 44px; }
+.mascot.md { width: 64px; height: 64px; }
+.mascot.xl { width: 108px; height: 108px; }
+.mc-ring { fill: none; stroke: var(--ok); stroke-width: 7; stroke-linecap: round; }
+.mc-body { fill: var(--accent); }
+.mc-eye { fill: #2a1d00; }
+.mc-mouth { fill: none; stroke: #2a1d00; stroke-width: 3.2; stroke-linecap: round; }
+.mc-cheek { fill: #ff8f8f; opacity: .65; }
+
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand h1 { margin: 0; font-size: clamp(1.1rem, 3.6vw, 1.5rem); font-weight: 900; line-height: 1.2; }
+.clock { text-align: right; line-height: 1.1; }
+.clock .k { display: block; font-size: .7rem; color: var(--muted); }
+.clock .v { font-size: 1.9rem; font-weight: 900; font-variant-numeric: tabular-nums; }
+.clock.warn .v { color: var(--bad); animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .55; } }
+
+.btn {
+  font-weight: 700;
+  font-size: .92rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: .5em 1.1em;
+  min-height: 44px;
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.btn:focus-visible, .st:focus-visible, .pad:focus-visible, .pl:focus-visible, .key:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* 窓 */
+.win {
+  position: relative;
+  border: 6px solid var(--line);
+  border-radius: 26px;
+  overflow: hidden;
+  background: #070b1e;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, .6);
+}
+.win svg { display: block; width: 100%; height: auto; }
+#earth { transform-box: fill-box; transform-origin: center; transition: transform 1.2s cubic-bezier(.3, .7, .2, 1); }
+.say { display: flex; align-items: center; gap: 12px; margin: 12px 0 14px; }
+.bubble {
+  position: relative;
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px 14px;
+  line-height: 1.65;
+  min-height: 3.4em;
+  display: flex;
+  align-items: center;
+}
+.bubble::before {
+  content: "";
+  position: absolute;
+  left: -8px; top: 22px;
+  width: 14px; height: 14px;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  transform: rotate(45deg);
+}
+
+/* 操作卓 */
+.stations { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.st {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px 12px;
+  cursor: pointer;
+  min-height: 104px;
+}
+.st:hover { border-color: var(--muted); }
+.st svg { width: 34px; height: 34px; color: var(--accent); }
+.st b { font-size: 1rem; font-weight: 900; }
+.st span.sub { font-size: .78rem; color: var(--muted); }
+.st .lamp {
+  position: absolute;
+  top: 12px; right: 12px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--bad);
+  box-shadow: 0 0 8px var(--bad);
+}
+.st.done { border-color: var(--ok); }
+.st.done .lamp { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.st.done svg { color: var(--ok); }
+.st.pod { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 14px; min-height: 84px; }
+.st.pod .lamp { top: 50%; transform: translateY(-50%); }
+.st[aria-disabled="true"] { opacity: .6; }
+.st[aria-disabled="true"] .lamp { background: var(--muted); box-shadow: none; }
+@media (min-width: 720px) {
+  .stations { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* モーダル */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background: color-mix(in srgb, var(--bg2) 80%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  overflow-y: auto;
+}
+.overlay[hidden] { display: none; }
+.sheet {
+  width: min(560px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 14px 40px var(--shadow);
+}
+.sheet h2 { margin: 0 0 6px; font-size: 1.3rem; font-weight: 900; }
+.sheet p { margin: 0 0 12px; line-height: 1.75; }
+.sheet .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.sheet .head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.sheet .head h2 { margin: 0; }
+.rules { margin: 0 0 14px; padding-left: 1.2em; line-height: 1.8; color: var(--muted); font-size: .9rem; }
+.msg { min-height: 1.6em; margin: 8px 0 0; font-weight: 700; }
+.msg.bad { color: var(--bad); }
+.msg.good { color: var(--ok); }
+.hintbox { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.hintbox ul { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.7; color: var(--muted); font-size: .92rem; }
+.reward {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border: 2px solid var(--ok);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ok) 14%, var(--panel));
+  font-weight: 700;
+  line-height: 1.7;
+}
+.reward strong { font-size: 1.4rem; }
+
+/* 謎ごとのUI */
+.planets { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.pl {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: 999px;
+  padding: 6px 14px 6px 8px; min-height: 44px; cursor: pointer; font-weight: 700;
+}
+.pl .dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: inset -5px -4px 0 rgba(0, 0, 0, .22); }
+.pl[disabled] { opacity: .35; cursor: default; }
+.slots { display: flex; gap: 6px; margin: 10px 0; }
+.slot {
+  flex: 1; min-height: 46px; display: flex; align-items: center; justify-content: center;
+  border: 2px dashed var(--line); border-radius: 10px; font-weight: 700; font-size: .85rem;
+}
+.slot.on { border-style: solid; border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, var(--panel)); }
+.shake { animation: shake .4s; }
+@keyframes shake { 20% { transform: translateX(-7px); } 40% { transform: translateX(7px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+.legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0 12px; }
+.legend div { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 6px 0; text-align: center; font-size: 1.05rem; font-weight: 700; }
+.cipher { text-align: center; font-size: 2.4rem; letter-spacing: .35em; padding: 12px 0 12px .35em; background: var(--panel2); border-radius: 12px; border: 1px solid var(--line); }
+.inp {
+  font: inherit; font-size: 1.1rem; width: 100%; padding: .6em .8em; margin: 10px 0 0;
+  color: var(--text); background: var(--panel2); border: 2px solid var(--line); border-radius: 12px;
+}
+.inp:focus { outline: none; border-color: var(--accent); }
+.pads { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0; }
+.pad {
+  min-height: 88px; border: 0; border-radius: 18px; font-size: 2rem; font-weight: 900; color: rgba(0, 0, 0, .55);
+  cursor: pointer; filter: brightness(.55) saturate(.9); transition: filter .12s, transform .12s;
+}
+.pad:not([disabled]) { filter: brightness(.85); }
+.pad.lit { filter: brightness(1.25) saturate(1.1); transform: scale(.96); box-shadow: 0 0 22px currentColor; }
+.pad[disabled] { cursor: default; }
+.dots { display: flex; justify-content: center; gap: 8px; margin: 4px 0 2px; }
+.dots i { width: 12px; height: 12px; border-radius: 50%; background: var(--line); }
+.dots i.on { background: var(--ok); }
+.tanks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 10px 0; }
+.tank { text-align: center; font-weight: 700; }
+.tank .gauge {
+  position: relative; height: 150px; margin: 6px auto; width: 78px;
+  border: 3px solid var(--line); border-radius: 10px 10px 16px 16px; overflow: hidden; background: var(--panel2);
+}
+.tank .fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--accent); transition: height .45s ease; }
+.tank .tick { position: absolute; left: 0; right: 0; height: 0; border-top: 1px dashed rgba(127, 127, 127, .45); }
+.fuelbtns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fuelbtns .btn { border-radius: 12px; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+.key {
+  min-height: 48px; font-size: 1.3rem; font-weight: 900; background: var(--panel2);
+  border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+}
+.code { display: flex; justify-content: center; gap: 8px; margin: 8px 0; }
+.code span {
+  width: 52px; height: 64px; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: 900; border: 2px solid var(--line); border-radius: 12px; background: var(--panel2);
+}
+.code span.on { border-color: var(--accent); }
+.memo { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+.memo li {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel2); font-weight: 700;
+}
+.memo li b { font-size: 1.3rem; }
+.memo li.unknown b { color: var(--muted); }
+.stars { font-size: 2rem; letter-spacing: .15em; color: var(--accent); }
+.result-stats { color: var(--muted); font-size: .92rem; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(20px); max-width: 90vw;
+  background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: .9rem;
+  opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 9500;
+}
+.toast.show { opacity: 1; transform: translateX(-50%); }
+@media (prefers-reduced-motion: reduce) {
+  #earth, .toast, .tank .fill, .pad { transition: none; }
+  .clock.warn .v, .shake { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- ぷらねっと君（仮イラスト）。本物のマスコット画像に差し替えてください -->
+    <symbol id="mascot" viewBox="0 0 120 120">
+      <ellipse class="mc-ring" cx="60" cy="66" rx="52" ry="15" transform="rotate(-16 60 66)"/>
+      <circle class="mc-body" cx="60" cy="60" r="35"/>
+      <circle class="mc-eye" cx="48" cy="56" r="4.6"/>
+      <circle class="mc-eye" cx="72" cy="56" r="4.6"/>
+      <ellipse class="mc-cheek" cx="41" cy="68" rx="6" ry="4"/>
+      <ellipse class="mc-cheek" cx="79" cy="68" rx="6" ry="4"/>
+      <path class="mc-mouth" d="M52 68 Q60 77 68 68"/>
+      <path class="mc-ring" d="M9 66 A52 15 0 0 0 111 66" transform="rotate(-16 60 66)"/>
+    </symbol>
+    <symbol id="i-nav" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="24" cy="24" r="6" fill="currentColor"/><ellipse cx="24" cy="24" rx="19" ry="8" transform="rotate(-25 24 24)"/><circle cx="38" cy="14" r="2.5" fill="currentColor"/></g></symbol>
+    <symbol id="i-comm" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M10 34 Q10 14 30 14"/><path d="M16 36 Q16 22 28 22"/><circle cx="30" cy="30" r="3" fill="currentColor"/><path d="M30 30 L40 40"/></g></symbol>
+    <symbol id="i-mem" viewBox="0 0 48 48"><g fill="currentColor"><rect x="7" y="7" width="15" height="15" rx="4"/><rect x="26" y="7" width="15" height="15" rx="4" opacity=".5"/><rect x="7" y="26" width="15" height="15" rx="4" opacity=".5"/><rect x="26" y="26" width="15" height="15" rx="4"/></g></symbol>
+    <symbol id="i-fuel" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="12" y="6" width="24" height="36" rx="6"/><path d="M12 26 H36" /><path d="M16 32 H32" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-pod" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M24 4 C34 12 34 28 30 36 H18 C14 28 14 12 24 4 Z"/><circle cx="24" cy="19" r="4"/><path d="M18 36 L12 42 M30 36 L36 42 M24 38 V45"/></g></symbol>
+  </defs>
+</svg>
+
+<main class="app">
+  <header class="top">
+    <div class="brand">
+      <svg class="mascot sm" aria-hidden="true"><use href="#mascot"/></svg>
+      <h1>宇宙船からの脱出</h1>
+    </div>
+    <div class="clock" id="clock"><span class="k">のこり時間</span><span class="v" id="time">10:00</span></div>
+  </header>
+
+  <div class="win" aria-hidden="true">
+    <svg viewBox="0 0 600 170" preserveAspectRatio="xMidYMid slice">
+      <g id="stars"></g>
+      <defs>
+        <clipPath id="earthClip"><circle cx="470" cy="88" r="58"/></clipPath>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="70%" stop-color="#5ab4ff" stop-opacity=".45"/><stop offset="100%" stop-color="#5ab4ff" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g id="earth">
+        <circle cx="470" cy="88" r="78" fill="url(#glow)"/>
+        <circle cx="470" cy="88" r="58" fill="#2f6fd0"/>
+        <g clip-path="url(#earthClip)" fill="#4cb36f">
+          <path d="M430 70 Q445 52 468 60 Q480 70 466 84 Q452 92 440 86 Q426 82 430 70 Z"/>
+          <path d="M486 96 Q504 90 516 104 Q512 126 494 128 Q482 114 486 96 Z"/>
+          <path d="M440 112 Q456 108 462 122 Q452 138 438 130 Z"/>
+        </g>
+        <circle cx="470" cy="88" r="58" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="2"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="say">
+    <svg class="mascot md" aria-hidden="true"><use href="#mascot"/></svg>
+    <div class="bubble" id="say" aria-live="polite"></div>
+  </div>
+
+  <section class="stations" id="stations" aria-label="船内の操作卓"></section>
+  <div style="margin-top:12px"><button class="btn" id="btnMemo" type="button">メモ帳を見る</button></div>
+</main>
+
+<div class="overlay" id="intro">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="head">
+      <svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg>
+      <h2 id="introTitle">宇宙船からの脱出</h2>
+    </div>
+    <p>たいへん！ 宇宙船のエンジンが止まっちゃった。ぷらねっと君といっしょに、10分以内に脱出ポッドを動かして、地球へ帰ろう！</p>
+    <ul class="rules">
+      <li>謎は全部で5つ。船内の操作卓をタップして挑戦しよう。</li>
+      <li>のこり時間は10分。ヒントは見られるけど、1回につき30秒へるよ。</li>
+      <li>見つけた数字は「メモ帳」に残るよ。</li>
+    </ul>
+    <div class="row"><button class="btn primary" id="btnStart" type="button">ミッション開始</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle" id="sheet"></div>
+</div>
+
+<div class="overlay" id="end" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="endTitle" id="endSheet"></div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+'use strict';
+
+const TOTAL = 600;     // 制限時間（秒）
+const PENALTY = 30;    // ヒント1回あたりの減算（秒）
+const $ = (s) => document.querySelector(s);
+const el = {
+  time: $('#time'), clock: $('#clock'), say: $('#say'), stations: $('#stations'), intro: $('#intro'),
+  modal: $('#modal'), sheet: $('#sheet'), end: $('#end'), endSheet: $('#endSheet'), toast: $('#toast'), earth: $('#earth')
+};
+
+/* 発進コード：ダイヤルの数字を「太陽に近い惑星の順」に並べる */
+const ORDER = ['水星', '金星', '地球', '火星'];
+const DIALS = {
+  nav:  { planet: '地球', digit: 4 },
+  comm: { planet: '金星', digit: 7 },
+  mem:  { planet: '水星', digit: 2 },
+  fuel: { planet: '火星', digit: 1 }
+};
+const CODE = ORDER.map((p) => Object.values(DIALS).find((d) => d.planet === p).digit).join('');
+
+const STATIONS = [
+  { id: 'nav',  name: '航法パネル',     sub: '惑星のスイッチ', icon: 'i-nav' },
+  { id: 'comm', name: '通信機',         sub: '暗号のメッセージ', icon: 'i-comm' },
+  { id: 'mem',  name: '記憶コンソール', sub: '光のパターン', icon: 'i-mem' },
+  { id: 'fuel', name: '燃料タンク',     sub: 'ちょうどの量', icon: 'i-fuel' },
+  { id: 'pod',  name: '脱出ポッド',     sub: '発進コード', icon: 'i-pod' }
+];
+
+const PUZZLES = {
+  nav: {
+    title: '航法パネル',
+    story: 'スイッチがバラバラになっている。太陽に近い順に、惑星のスイッチを押して航路を設定しよう。',
+    hints: ['「水・金・地・火・木…」という覚え方、聞いたことがあるかも？', '太陽に近い順は、水星 → 金星 → 地球 → 火星 → 木星だよ。']
+  },
+  comm: {
+    title: '通信機',
+    story: '救難信号は暗号になっている。対応表を使ってメッセージを読み解き、答えをひらがなで入力しよう。',
+    hints: ['対応表を使って、記号を左から1つずつ文字に直そう。', '最初の記号は「ほ」。「ほし…」と読めるよ。']
+  },
+  mem: {
+    title: '記憶コンソール',
+    story: 'コンソールが光のパターンを再生する。同じ順番で、パッドをタップしよう。',
+    hints: ['光るのは5回。「ランプを見る」は何回でも押せるよ。', '色だけでなく、パッドの形（▲ ● ■ ◆）も目印にしよう。']
+  },
+  fuel: {
+    title: '燃料タンク',
+    story: '燃料ラインから補給できる。3Lと5Lのタンクだけを使って、5Lタンクにちょうど4Lを入れよう。目盛りはないので、「満タン」と「空」を上手に使おう。',
+    hints: ['まず5Lタンクを満タンにして、3Lタンクへ移してみよう。', '5Lタンクに2L残るね。3Lタンクを空にして、その2Lを3Lタンクへ移し、もう一度5Lを満タンにして3Lタンクを満たすと…？']
+  },
+  pod: {
+    title: '脱出ポッド',
+    story: '発進コードは4桁。メモ帳の「ダイヤルの数字」を、太陽に近い惑星の順に並べて入力しよう。',
+    hints: ['メモ帳には「惑星の名前」と「ダイヤルの数字」が書いてあるよ。', '水星 → 金星 → 地球 → 火星 の順に、それぞれの数字を入力しよう。']
+  }
+};
+
+/* ---------- 状態 ---------- */
+let G = null;
+let timerId = null;
+let toastTimer = null;
+let playToken = 0;
+
+const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const now = () => performance.now();
+function toast(msg) {
+  el.toast.textContent = msg;
+  el.toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.toast.classList.remove('show'), 2600);
+}
+function say(text) { el.say.textContent = text; }
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function newGame() {
+  G = {
+    startedAt: now(), penalty: 0, running: false, over: false,
+    solved: { nav: false, comm: false, mem: false, fuel: false, pod: false },
+    hints: { nav: 0, comm: 0, mem: 0, fuel: 0, pod: 0 },
+    hintTotal: 0,
+    memSeq: Array.from({ length: 5 }, () => Math.floor(Math.random() * 4)),
+    fuel: { a: 0, b: 0, moves: 0 },
+    navOrder: shuffle(['水星', '金星', '地球', '火星', '木星'])
+  };
+}
+const remainingMs = () => Math.max(0, TOTAL * 1000 - (now() - G.startedAt) - G.penalty * 1000);
+function renderTime() {
+  const sec = Math.ceil(remainingMs() / 1000);
+  el.time.textContent = fmt(sec);
+  el.clock.classList.toggle('warn', sec <= 60);
+}
+function tick() {
+  if (!G || !G.running) return;
+  renderTime();
+  if (remainingMs() <= 0) lose();
+}
+const solvedCount = () => ['nav', 'comm', 'mem', 'fuel'].filter((k) => G.solved[k]).length;
+function renderEarth() {
+  const k = G.solved.pod ? 1.15 : 0.32 + 0.68 * (solvedCount() / 4) * 0.85;
+  el.earth.style.transform = `scale(${k})`;
+}
+
+/* ---------- 操作卓 ---------- */
+function buildStations() {
+  el.stations.textContent = '';
+  for (const s of STATIONS) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'st' + (s.id === 'pod' ? ' pod' : '');
+    b.dataset.id = s.id;
+    b.innerHTML = `<svg aria-hidden="true"><use href="#${s.icon}"/></svg><span class="lamp" aria-hidden="true"></span><div><b></b><br><span class="sub"></span></div>`;
+    b.querySelector('b').textContent = s.name;
+    b.addEventListener('click', () => openPuzzle(s.id));
+    el.stations.appendChild(b);
+  }
+}
+function renderStations() {
+  for (const b of el.stations.children) {
+    const id = b.dataset.id;
+    const s = STATIONS.find((x) => x.id === id);
+    const locked = id === 'pod' && solvedCount() < 4;
+    b.classList.toggle('done', G.solved[id]);
+    b.setAttribute('aria-disabled', String(locked));
+    b.querySelector('.sub').textContent = G.solved[id] ? '解決ずみ' : (locked ? 'ロック中' : s.sub);
+  }
+}
+
+/* ---------- モーダル ---------- */
+function openModal(html) {
+  el.sheet.innerHTML = html;
+  el.modal.hidden = false;
+}
+function closeModal() {
+  playToken++;
+  el.modal.hidden = true;
+  el.sheet.textContent = '';
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !el.modal.hidden) closeModal(); });
+el.modal.addEventListener('click', (e) => { if (e.target === el.modal) closeModal(); });
+
+function notebookHTML() {
+  let h = '<ul class="memo">';
+  for (const p of ORDER) {
+    const key = Object.keys(DIALS).find((k) => DIALS[k].planet === p);
+    const got = G.solved[key];
+    h += `<li class="${got ? '' : 'unknown'}"><span>${p}のダイヤル</span><b>${got ? DIALS[key].digit : '？'}</b></li>`;
+  }
+  return h + '</ul>';
+}
+function openMemo() {
+  openModal(`<h2 id="mTitle">メモ帳</h2><p>謎を解くと、ここにダイヤルの数字が書き込まれるよ。</p>${notebookHTML()}<div class="row"><button class="btn" id="mClose" type="button">とじる</button></div>`);
+  $('#mClose').addEventListener('click', closeModal);
+  $('#mClose').focus();
+}
+
+function openPuzzle(id) {
+  if (!G || G.over) return;
+  if (id === 'pod' && solvedCount() < 4) {
+    say('ポッドはまだロック中。ほかの4つの操作卓の謎を解いて、ダイヤルの数字を集めよう！');
+    toast('ポッドはまだロック中');
+    return;
+  }
+  const P = PUZZLES[id];
+  openModal(`
+    <div class="head"><svg class="mascot sm" aria-hidden="true"><use href="#mascot"/></svg><h2 id="mTitle"></h2></div>
+    <p id="mStory"></p>
+    <div id="mBody"></div>
+    <div class="hintbox" id="mHints"></div>
+    <div class="row"><button class="btn" id="mClose" type="button">とじる</button></div>`);
+  $('#mTitle').textContent = P.title;
+  $('#mStory').textContent = P.story;
+  $('#mClose').addEventListener('click', closeModal);
+  renderHints(id);
+  const body = $('#mBody');
+  if (G.solved[id]) { showSolved(id, body); return; }
+  MOUNT[id](body, id);
+}
+function renderHints(id) {
+  const P = PUZZLES[id], box = $('#mHints');
+  if (!box) return;
+  if (G.solved[id]) { box.hidden = true; return; }
+  const n = G.hints[id];
+  let h = '';
+  if (n > 0) h += '<ul>' + P.hints.slice(0, n).map((t) => `<li>${t}</li>`).join('') + '</ul>';
+  if (n < P.hints.length) h += `<button class="btn" id="mHint" type="button">ヒントを見る（のこり時間 −${PENALTY}秒）</button>`;
+  box.innerHTML = h;
+  const hb = $('#mHint');
+  if (hb) hb.addEventListener('click', () => {
+    G.hints[id]++; G.hintTotal++; G.penalty += PENALTY;
+    renderTime();
+    renderHints(id);
+    if (remainingMs() <= 0) { closeModal(); lose(); }
+  });
+}
+function showSolved(id, body) {
+  if (id === 'pod') { body.innerHTML = '<p>ポッドは発進ずみだよ。</p>'; return; }
+  const d = DIALS[id];
+  body.innerHTML = `<div class="reward">${d.planet}のダイヤル：<strong>${d.digit}</strong><br>メモ帳に書き込んだよ。</div>`;
+}
+function solve(id) {
+  if (G.solved[id]) return;
+  G.solved[id] = true;
+  renderStations(); renderEarth();
+  const hb = $('#mHints'); if (hb) hb.hidden = true;
+  if (id === 'pod') { setTimeout(win, 700); return; }
+  const d = DIALS[id];
+  const left = 4 - solvedCount();
+  say(left > 0
+    ? `やった！ ${d.planet}のダイヤルは「${d.digit}」。地球が近づいたよ。あと${left}つ！`
+    : `やった！ ${d.planet}のダイヤルは「${d.digit}」。ポッドのロックが解除されたよ。発進コードを入力しよう！`);
+  const body = $('#mBody');
+  if (body) {
+    body.innerHTML = `<div class="reward">解決！<br>${d.planet}のダイヤル：<strong>${d.digit}</strong><br>メモ帳に書き込んだよ。</div>`;
+  }
+}
+
+/* ---------- 謎ごとの画面 ---------- */
+const MOUNT = {};
+
+MOUNT.nav = (body, id) => {
+  const COLORS = { 水星: '#b9b3a8', 金星: '#e8c06a', 地球: '#3f7fe0', 火星: '#d9603b', 木星: '#d9a77a' };
+  const ANSWER = ['水星', '金星', '地球', '火星', '木星'];
+  let picked = [];
+  body.innerHTML = '<div class="slots" id="slots"></div><div class="planets" id="pls"></div><div class="msg" id="msg" aria-live="polite"></div><div class="row"><button class="btn" id="reset" type="button">やり直す</button></div>';
+  const slots = $('#slots'), pls = $('#pls'), msg = $('#msg');
+  function draw() {
+    slots.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement('div');
+      s.className = 'slot' + (picked[i] ? ' on' : '');
+      s.textContent = picked[i] || (i === 0 ? '太陽に近い' : (i === 4 ? '遠い' : ''));
+      slots.appendChild(s);
+    }
+    pls.querySelectorAll('.pl').forEach((b) => { b.disabled = picked.includes(b.dataset.name); });
+  }
+  for (const name of G.navOrder) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'pl'; b.dataset.name = name;
+    b.innerHTML = '<span class="dot"></span><span></span>';
+    b.firstChild.style.background = COLORS[name];
+    b.lastChild.textContent = name;
+    b.addEventListener('click', () => {
+      picked.push(name);
+      draw();
+      if (picked.length === 5) {
+        if (picked.every((n, i) => n === ANSWER[i])) {
+          msg.className = 'msg good'; msg.textContent = '航路が設定された！';
+          pls.querySelectorAll('.pl').forEach((x) => { x.disabled = true; });
+          solve(id);
+        } else {
+          msg.className = 'msg bad'; msg.textContent = '航路が合わない… もう一度！';
+          slots.classList.remove('shake'); void slots.offsetWidth; slots.classList.add('shake');
+          setTimeout(() => { picked = []; draw(); }, 650);
+        }
+      }
+    });
+    pls.appendChild(b);
+  }
+  $('#reset').addEventListener('click', () => { picked = []; msg.textContent = ''; draw(); });
+  draw();
+};
+
+MOUNT.comm = (body, id) => {
+  const LEGEND = [['▲', 'ほ'], ['●', 'ぞ'], ['■', 'ら'], ['◆', 'し'], ['★', 'ま'], ['✚', 'る'], ['☾', 'ぬ'], ['☀', 'ひ']];
+  const MESSAGE = ['▲', '◆', '●', '■'];
+  body.innerHTML = '<div class="legend" id="legend"></div><div class="cipher" aria-label="暗号のメッセージ"></div><input class="inp" id="ans" type="text" inputmode="text" autocomplete="off" placeholder="こたえ（ひらがな）" aria-label="こたえ"><div class="msg" id="msg" aria-live="polite"></div><div class="row"><button class="btn primary" id="send" type="button">送信する</button></div>';
+  $('#legend').innerHTML = LEGEND.map(([s, k]) => `<div>${s}＝${k}</div>`).join('');
+  $('.cipher').textContent = MESSAGE.join('');
+  const norm = (t) => t.trim().replace(/[\u30a1-\u30f6]/g, (c) => String.fromCharCode(c.charCodeAt(0) - 0x60)).replace(/\s+/g, '');
+  const check = () => {
+    const v = norm($('#ans').value), msg = $('#msg');
+    if (v === 'ほしぞら' || v === '星空') {
+      msg.className = 'msg good'; msg.textContent = '救難信号を解読できた！';
+      $('#send').disabled = true; $('#ans').disabled = true;
+      solve(id);
+    } else {
+      msg.className = 'msg bad'; msg.textContent = 'うまく読めないみたい… 対応表をもう一度見てみよう。';
+      $('.cipher').classList.remove('shake'); void $('.cipher').offsetWidth; $('.cipher').classList.add('shake');
+    }
+  };
+  $('#send').addEventListener('click', check);
+  $('#ans').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.isComposing) check(); });
+};
+
+MOUNT.mem = (body, id) => {
+  const PADS = [
+    { s: '▲', c: '#ff6b6b', n: '赤' },
+    { s: '●', c: '#5aa9ff', n: '青' },
+    { s: '■', c: '#ffd35a', n: '黄' },
+    { s: '◆', c: '#62d6c6', n: '緑' }
+  ];
+  const seq = G.memSeq;
+  let entered = [], locked = true, ready = false;
+  body.innerHTML = '<div class="dots" id="dots"></div><div class="pads" id="pads"></div><div class="msg" id="msg" aria-live="polite"></div><div class="row"><button class="btn primary" id="play" type="button">ランプを見る</button></div>';
+  const pads = $('#pads'), msg = $('#msg');
+  PADS.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'pad'; b.style.background = p.c; b.style.color = p.c;
+    b.setAttribute('aria-label', `${p.n}のパッド`);
+    b.innerHTML = `<span style="color:rgba(0,0,0,.55)">${p.s}</span>`;
+    b.disabled = true;
+    b.addEventListener('click', () => press(i));
+    pads.appendChild(b);
+  });
+  const padEls = [...pads.children];
+  function setDots() {
+    $('#dots').innerHTML = seq.map((_, i) => `<i class="${i < entered.length ? 'on' : ''}"></i>`).join('');
+  }
+  async function flash(i, ms) {
+    padEls[i].classList.add('lit');
+    await sleep(ms);
+    padEls[i].classList.remove('lit');
+  }
+  async function play() {
+    const my = ++playToken;
+    locked = true; entered = []; setDots();
+    padEls.forEach((p) => { p.disabled = true; });
+    $('#play').disabled = true;
+    msg.className = 'msg'; msg.textContent = 'よく見てね…';
+    await sleep(450);
+    for (const i of seq) {
+      if (my !== playToken) return;
+      await flash(i, 520);
+      await sleep(230);
+    }
+    if (my !== playToken) return;
+    locked = false; ready = true;
+    padEls.forEach((p) => { p.disabled = false; });
+    $('#play').disabled = false;
+    msg.textContent = '同じ順番でタップしよう！';
+  }
+  async function press(i) {
+    if (locked || !ready) return;
+    if (seq[entered.length] === i) {
+      entered.push(i); setDots();
+      flash(i, 180);
+      if (entered.length === seq.length) {
+        locked = true; ready = false;
+        msg.className = 'msg good'; msg.textContent = 'パターン一致！';
+        padEls.forEach((p) => { p.disabled = true; });
+        $('#play').disabled = true;
+        solve(id);
+      }
+    } else {
+      entered = []; setDots();
+      msg.className = 'msg bad'; msg.textContent = 'ちがうみたい。はじめからもう一度！';
+      pads.classList.remove('shake'); void pads.offsetWidth; pads.classList.add('shake');
+    }
+  }
+  $('#play').addEventListener('click', play);
+  setDots();
+};
+
+MOUNT.fuel = (body, id) => {
+  const F = G.fuel, CA = 3, CB = 5;
+  body.innerHTML = `
+    <div class="tanks">
+      <div class="tank"><div>3Lタンク</div><div class="gauge"><div class="fill" id="fa"></div></div><div id="la"></div></div>
+      <div class="tank"><div>5Lタンク</div><div class="gauge"><div class="fill" id="fb"></div></div><div id="lb"></div></div>
+    </div>
+    <div class="fuelbtns">
+      <button class="btn" data-a="fillA" type="button">3Lを満タンにする</button>
+      <button class="btn" data-a="fillB" type="button">5Lを満タンにする</button>
+      <button class="btn" data-a="emptyA" type="button">3Lを空にする</button>
+      <button class="btn" data-a="emptyB" type="button">5Lを空にする</button>
+      <button class="btn" data-a="AtoB" type="button">3L → 5Lへ移す</button>
+      <button class="btn" data-a="BtoA" type="button">5L → 3Lへ移す</button>
+    </div>
+    <div class="msg" id="msg" aria-live="polite"></div>
+    <div class="row"><button class="btn" id="reset" type="button">最初からやり直す</button></div>`;
+  const draw = () => {
+    $('#fa').style.height = (F.a / CA * 100) + '%';
+    $('#fb').style.height = (F.b / CB * 100) + '%';
+    $('#la').textContent = `${F.a}L`;
+    $('#lb').textContent = `${F.b}L`;
+  };
+  const act = {
+    fillA: () => { F.a = CA; }, fillB: () => { F.b = CB; },
+    emptyA: () => { F.a = 0; }, emptyB: () => { F.b = 0; },
+    AtoB: () => { const t = Math.min(F.a, CB - F.b); F.a -= t; F.b += t; },
+    BtoA: () => { const t = Math.min(F.b, CA - F.a); F.b -= t; F.a += t; }
+  };
+  body.querySelectorAll('[data-a]').forEach((b) => b.addEventListener('click', () => {
+    if (G.solved[id]) return;
+    act[b.dataset.a](); F.moves++; draw();
+    if (F.b === 4) {
+      $('#msg').className = 'msg good'; $('#msg').textContent = `ちょうど4L！（${F.moves}手）`;
+      body.querySelectorAll('button').forEach((x) => { x.disabled = true; });
+      solve(id);
+    } else { $('#msg').className = 'msg'; $('#msg').textContent = `${F.moves}手`; }
+  }));
+  $('#reset').addEventListener('click', () => { F.a = 0; F.b = 0; F.moves = 0; $('#msg').textContent = ''; draw(); });
+  draw();
+};
+
+MOUNT.pod = (body, id) => {
+  let code = '';
+  body.innerHTML = notebookHTML() + '<div class="code" id="code"></div><div class="msg" id="msg" aria-live="polite"></div><div class="keypad" id="keys"></div>';
+  const draw = () => {
+    $('#code').innerHTML = [0, 1, 2, 3].map((i) => `<span class="${i === code.length ? 'on' : ''}">${code[i] || ''}</span>`).join('');
+  };
+  const keys = $('#keys');
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, '消', 0, '発進'].forEach((k) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'key'; b.textContent = k;
+    if (k === '発進') { b.style.background = 'var(--accent)'; b.style.color = 'var(--accent-ink)'; b.style.fontSize = '1rem'; }
+    if (k === '消') b.style.fontSize = '1rem';
+    b.addEventListener('click', () => {
+      if (G.solved[id]) return;
+      if (k === '消') code = code.slice(0, -1);
+      else if (k === '発進') { submit(); return; }
+      else if (code.length < 4) code += k;
+      draw();
+      if (code.length === 4) setTimeout(submit, 250);
+    });
+    keys.appendChild(b);
+  });
+  function submit() {
+    if (G.solved[id] || code.length < 4) return;
+    const msg = $('#msg');
+    if (code === CODE) {
+      msg.className = 'msg good'; msg.textContent = 'コード承認！ 発進シークエンス開始…';
+      keys.querySelectorAll('button').forEach((x) => { x.disabled = true; });
+      solve(id);
+    } else {
+      msg.className = 'msg bad'; msg.textContent = 'コードがちがうみたい。メモ帳をもう一度見てみよう。';
+      $('#code').classList.remove('shake'); void $('#code').offsetWidth; $('#code').classList.add('shake');
+      code = ''; draw();
+    }
+  }
+  draw();
+};
+
+/* ---------- 開始・結果 ---------- */
+function start() {
+  newGame();
+  G.running = true;
+  G.startedAt = now();
+  el.intro.hidden = true;
+  el.end.hidden = true;
+  closeModal();
+  buildStations(); renderStations(); renderEarth(); renderTime();
+  say('5つの謎を解いて、脱出ポッドを動かそう！ まずは気になる操作卓をタップしてみてね。');
+  clearInterval(timerId);
+  timerId = setInterval(tick, 250);
+}
+function stopTimer() { clearInterval(timerId); timerId = null; if (G) G.running = false; }
+function win() {
+  if (!G || G.over) return;
+  const remain = Math.ceil(remainingMs() / 1000);
+  stopTimer(); G.over = true;
+  closeModal(); renderTime();
+  const stars = remain >= 300 ? 3 : (remain >= 150 ? 2 : 1);
+  const used = TOTAL - remain;
+  G.result = { remain, stars, used };
+  el.endSheet.innerHTML = `
+    <div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2 id="endTitle">脱出成功！</h2></div>
+    <p>ポッドは無事に発進して、窓の外の地球がどんどん大きくなっていく。ありがとう、おかげで地球に帰れるよ！</p>
+    <div class="stars" aria-label="星${stars}つ">${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+    <p class="result-stats">のこり時間 ${fmt(remain)} ／ ヒント ${G.hintTotal}回</p>
+    <div class="row"><button class="btn primary" id="eShare" type="button">結果をシェア</button><button class="btn" id="eAgain" type="button">もう一度あそぶ</button></div>`;
+  el.end.hidden = false;
+  $('#eShare').addEventListener('click', share);
+  $('#eAgain').addEventListener('click', start);
+}
+function lose() {
+  if (!G || G.over) return;
+  stopTimer(); G.over = true;
+  closeModal(); renderTime();
+  el.endSheet.innerHTML = `
+    <div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2 id="endTitle">時間切れ…</h2></div>
+    <p>脱出ポッドが間に合わなかった… でも大丈夫、もう一度チャレンジしよう！ 謎の答えは毎回同じ（光のパターンだけ毎回かわるよ）。</p>
+    <p class="result-stats">解いた謎：${Object.values(G.solved).filter(Boolean).length}/5</p>
+    <div class="row"><button class="btn primary" id="eAgain" type="button">もう一度あそぶ</button></div>`;
+  el.end.hidden = false;
+  $('#eAgain').addEventListener('click', start);
+}
+async function share() {
+  const r = G.result;
+  const text = `「宇宙船からの脱出」を、のこり${fmt(r.remain)}で脱出成功！（${'★'.repeat(r.stars)}${'☆'.repeat(3 - r.stars)}、ヒント${G.hintTotal}回）`;
+  try { if (navigator.share) { await navigator.share({ text }); return; } }
+  catch (err) { if (err && err.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); toast('結果をコピーしました'); }
+  catch (err) { toast(text); }
+}
+
+/* ---------- 起動 ---------- */
+(function initStars() {
+  const g = $('#stars');
+  let h = '';
+  for (let i = 0; i < 70; i++) {
+    const x = Math.random() * 600, y = Math.random() * 170, r = 0.6 + Math.random() * 1.5, o = 0.35 + Math.random() * 0.65;
+    h += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="#fff" opacity="${o.toFixed(2)}"/>`;
+  }
+  g.innerHTML = h;
+})();
+newGame();
+buildStations(); renderStations(); renderEarth();
+say('5つの謎を解いて、脱出ポッドを動かそう！');
+$('#btnStart').addEventListener('click', start);
+$('#btnMemo').addEventListener('click', () => { if (G && !G.over) openMemo(); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>無重力ランナー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#dce8fb;--bg2:#c3d5f4;--panel:#ffffff;--panel2:#eef3fd;--line:#aebfe3;--text:#16204a;--muted:#55639a;--accent:#f2a900;--accent-ink:#2a1d00;--ok:#138a7c;--bad:#d6454b;--shadow:rgba(22,32,74,.3);--star:rgba(255,255,255,0)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1737;--bg2:#080d22;--panel:#1b2650;--panel2:#141d42;--line:#34416f;--text:#eef1fb;--muted:#a3aed6;--accent:#ffd35a;--accent-ink:#2a1d00;--ok:#62d6c6;--bad:#ff7a80;--shadow:rgba(0,0,0,.55);--star:rgba(255,255,255,.75)}}
+:root[data-theme="dark"]{--bg:#0f1737;--bg2:#080d22;--panel:#1b2650;--panel2:#141d42;--line:#34416f;--text:#eef1fb;--muted:#a3aed6;--accent:#ffd35a;--accent-ink:#2a1d00;--ok:#62d6c6;--bad:#ff7a80;--shadow:rgba(0,0,0,.55);--star:rgba(255,255,255,.75)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic","Meiryo",sans-serif;font-weight:500;color:var(--text);background:linear-gradient(180deg,var(--bg),var(--bg2));background-attachment:fixed;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(1.6px 1.6px at 8% 14%,var(--star),transparent),radial-gradient(1.2px 1.2px at 22% 66%,var(--star),transparent),radial-gradient(1.8px 1.8px at 35% 28%,var(--star),transparent),radial-gradient(1.2px 1.2px at 63% 12%,var(--star),transparent),radial-gradient(1.8px 1.8px at 90% 30%,var(--star),transparent),radial-gradient(1.2px 1.2px at 94% 88%,var(--star),transparent)}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.app{position:relative;max-width:520px;margin:0 auto;padding:12px 14px 32px}
+.mascot{flex:none;display:block;width:46px;height:46px}.mascot.sm{width:42px;height:42px}.mascot.xl{width:96px;height:96px}
+.mc-ring{fill:none;stroke:var(--ok);stroke-width:7;stroke-linecap:round}.mc-body{fill:var(--accent)}.mc-eye{fill:#2a1d00}.mc-mouth{fill:none;stroke:#2a1d00;stroke-width:3.2;stroke-linecap:round}.mc-cheek{fill:#ff8f8f;opacity:.65}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand h1{margin:0;font-size:clamp(1.1rem,4vw,1.45rem);font-weight:900;line-height:1.2}.brand p{margin:2px 0 0;font-size:.76rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{height:32px;padding:0 12px;border-radius:16px;background:var(--panel);border:1px solid var(--line);font-size:.85rem;font-weight:900;display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.chip span{font-size:.72rem;font-weight:500;color:var(--muted)}
+.cv{display:block;width:100%;height:auto;border-radius:22px;border:1px solid var(--line);touch-action:none;background:#060b22;user-select:none;-webkit-user-select:none;box-shadow:0 10px 28px var(--shadow)}
+.cap{text-align:center;color:var(--muted);font-size:.82rem;margin:10px 0 0;line-height:1.6}
+.btn{font-weight:700;font-size:.92rem;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.5em 1.2em;min-height:46px;cursor:pointer}
+.btn:hover:not([disabled]){border-color:var(--muted)}.btn[disabled]{opacity:.45;cursor:default}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn:focus-visible,.lvl:focus-visible,.card:focus-visible,.slot:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:14px;background:color-mix(in srgb,var(--bg2) 82%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow-y:auto}
+.overlay[hidden]{display:none}
+.sheet{width:min(520px,100%);max-height:100%;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 20px 18px;box-shadow:0 14px 40px var(--shadow)}
+.sheet h2{margin:0;font-size:1.4rem;font-weight:900;line-height:1.3}.sheet .head{display:flex;align-items:center;gap:14px;margin-bottom:8px}.sheet p{margin:0 0 12px;line-height:1.8}
+.rules{margin:0 0 6px;padding-left:1.2em;line-height:1.8;color:var(--muted);font-size:.9rem}
+.meta{color:var(--muted);font-size:.9rem}.big{font-size:2.6rem;font-weight:900;line-height:1.1;margin:2px 0}.big small{font-size:1rem;color:var(--muted);font-weight:700}
+.stars{font-size:1.8rem;letter-spacing:.15em;color:var(--accent)}
+.lvls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.lvl{display:flex;flex-direction:column;align-items:center;gap:2px;background:color-mix(in srgb,var(--accent) 16%,var(--panel));border:2px solid var(--accent);border-radius:14px;padding:10px 4px;cursor:pointer;font-weight:900}
+.lvl span{font-size:.74rem;color:var(--muted);font-weight:500}.lvl[disabled]{opacity:.4;cursor:default;border-color:var(--line);background:var(--panel2)}
+.lvl:hover:not([disabled]){background:var(--accent);color:var(--accent-ink)}.lvl:hover:not([disabled]) span{color:var(--accent-ink)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);max-width:90vw;background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:9500;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+.cvwrap{width:min(100%,420px);margin:0 auto}</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="mascot" viewBox="0 0 120 120"><ellipse class="mc-ring" cx="60" cy="66" rx="52" ry="15" transform="rotate(-16 60 66)"/><circle class="mc-body" cx="60" cy="60" r="35"/><circle class="mc-eye" cx="48" cy="56" r="4.6"/><circle class="mc-eye" cx="72" cy="56" r="4.6"/><ellipse class="mc-cheek" cx="41" cy="68" rx="6" ry="4"/><ellipse class="mc-cheek" cx="79" cy="68" rx="6" ry="4"/><path class="mc-mouth" d="M52 68 Q60 77 68 68"/><path class="mc-ring" d="M9 66 A52 15 0 0 0 111 66" transform="rotate(-16 60 66)"/></symbol></defs></svg>
+
+<main class="app">
+<header class="top"><div class="brand"><svg class="mascot sm" aria-hidden="true"><use href="#mascot"/></svg><div><h1>無重力ランナー</h1><p>重力を反転して、ステーションを駆け抜けろ</p></div></div></header>
+<div class="chips"><div class="chip">きょり <b id="dist">0</b>m</div><div class="chip">星 <b id="gs">0</b></div><div class="chip">ベスト <b id="bs">0</b>m</div></div>
+<div class="cvwrap"><canvas class="cv" id="cv" aria-label="ゲーム画面"></canvas></div>
+<button class="btn primary" id="flip" type="button" style="width:min(100%,420px);display:block;margin:12px auto 0;min-height:64px;font-size:1.05rem">タップで 重力反転</button>
+</main>
+
+<div class="overlay" id="intro"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="introTitle"><div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2 id="introTitle">無重力ランナー</h2></div><p>ステーションの通路を、重力を反転しながら走りぬけよう！</p><ul class="rules"><li>タップで重力が反転！ 床と天井をいったりきたりして、障害物をよけよう。</li><li>空中では反転できないよ。着地する直前のタップは、少しだけ先に受け付けるよ。</li><li>星を集めて、できるだけ遠くまで走ろう。だんだん速くなるよ。</li></ul><div class="row"><button class="btn primary" id="btnStart" type="button">走りはじめる</button></div></div></div>
+<div class="overlay" id="end" hidden><div class="sheet" role="dialog" aria-modal="true" id="endSheet"></div></div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+(()=>{
+'use strict';
+
+const $=(s)=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const rand=(a,b)=>a+Math.random()*(b-a);
+const fmt=(s)=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+let toastTimer=null;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
+async function share(text){try{if(navigator.share){await navigator.share({text});return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{await navigator.clipboard.writeText(text);toast('結果をコピーしました')}catch(e){toast(text)}}
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function showEnd(o){const s=$('#endSheet');
+ s.innerHTML='<div class="head"><svg class="mascot xl" aria-hidden="true"><use href="#mascot"/></svg><h2></h2></div><div class="big"></div><p class="txt"></p><p class="meta"></p><div class="row"><button class="btn primary" id="eAgain" type="button">もう一度あそぶ</button><button class="btn" id="eShare" type="button">結果をシェア</button></div>';
+ s.querySelector('h2').textContent=o.title;s.querySelector('.big').innerHTML=o.big||'';s.querySelector('.txt').textContent=o.text||'';s.querySelector('.meta').textContent=o.meta||'';
+ s.querySelector('#eAgain').textContent=o.again||'もう一度あそぶ';s.querySelector('#eAgain').addEventListener('click',()=>{$('#end').hidden=true;o.onAgain()});
+ s.querySelector('#eShare').addEventListener('click',()=>share(o.share));
+ if(o.noShare)s.querySelector('#eShare').remove();
+ $('#end').hidden=false;s.querySelector('#eAgain').focus({preventScroll:true})}
+function fitCanvas(cv,W,H){const dpr=Math.min(window.devicePixelRatio||1,2.5);cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.aspectRatio=W+'/'+H;const ctx=cv.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);return ctx}
+function localPt(cv,e,W,H){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+const STARS=Array.from({length:70},()=>({x:Math.random(),y:Math.random(),z:Math.random()*.8+.2,r:Math.random()*1.3+.4}));
+function drawSky(ctx,W,H,scroll=0,top='#060b22',bot='#10194a'){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,top);g.addColorStop(1,bot);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#fff';for(const s of STARS){const y=((s.y*H+scroll*s.z*.15)%H+H)%H;ctx.globalAlpha=.35+s.z*.6;ctx.beginPath();ctx.arc(s.x*W,y,s.r,0,6.283);ctx.fill()}ctx.globalAlpha=1}
+function drawMascot(ctx,x,y,r,o={}){const s=r/35;ctx.save();ctx.translate(x,y);ctx.rotate(o.rot||0);ctx.scale(s*(o.sx||1),s*(o.sy||1));
+ ctx.lineCap='round';ctx.lineWidth=7;ctx.strokeStyle='#62d6c6';
+ ctx.save();ctx.translate(0,6);ctx.rotate(-16*Math.PI/180);ctx.beginPath();ctx.ellipse(0,0,52,15,0,Math.PI,Math.PI*2);ctx.stroke();ctx.restore();
+ if(o.glow){ctx.shadowColor='rgba(255,211,90,.8)';ctx.shadowBlur=18}
+ ctx.fillStyle='#ffd35a';ctx.beginPath();ctx.arc(0,0,35,0,6.283);ctx.fill();ctx.shadowBlur=0;
+ ctx.fillStyle='#ff8f8f';ctx.globalAlpha=.65;ctx.beginPath();ctx.ellipse(-19,8,6,4,0,0,6.283);ctx.ellipse(19,8,6,4,0,0,6.283);ctx.fill();ctx.globalAlpha=1;
+ ctx.fillStyle='#2a1d00';ctx.strokeStyle='#2a1d00';ctx.lineWidth=3.2;
+ if(o.sad){ctx.beginPath();ctx.arc(-12,-4,4.6,0,6.283);ctx.arc(12,-4,4.6,0,6.283);ctx.fill();ctx.beginPath();ctx.moveTo(-8,13);ctx.quadraticCurveTo(0,6,8,13);ctx.stroke()}
+ else{ctx.beginPath();ctx.arc(-12,-4,4.6,0,6.283);ctx.arc(12,-4,4.6,0,6.283);ctx.fill();
+  if(o.oh){ctx.beginPath();ctx.ellipse(0,12,6,7,0,0,6.283);ctx.fill()}else{ctx.beginPath();ctx.moveTo(-8,8);ctx.quadraticCurveTo(0,17,8,8);ctx.stroke()}}
+ ctx.lineWidth=7;ctx.strokeStyle='#62d6c6';ctx.save();ctx.translate(0,6);ctx.rotate(-16*Math.PI/180);ctx.beginPath();ctx.ellipse(0,0,52,15,0,0,Math.PI);ctx.stroke();ctx.restore();
+ ctx.restore()}
+function drawStar(ctx,x,y,r,col='#ffd35a',rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.fillStyle=col;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();ctx.fill();ctx.restore()}
+
+
+const W=360,H=560,CEIL=64,FLOOR=H-64,cv=$('#cv'),ctx=fitCanvas(cv,W,H);
+const PX=92,R=16,GA=4300;
+let running=false,over=false,prev=0,x=0,speed=240,P,obs,coins,nextObs,gotc=0,best=store.get('zg-best',0),buf=0,flash=0,t0=0;
+$('#bs').textContent=best;
+function reset(){x=0;speed=240;P={y:FLOOR-R,vy:0,dir:1,on:true,rot:0};obs=[];coins=[];nextObs=520;gotc=0;buf=0;over=false;hud()}
+function hud(){$('#dist').textContent=Math.floor(x/20);$('#gs').textContent=gotc}
+function spawn(){const side=Math.random()<.5?'f':'c',w=rand(34,58),h=rand(46,84);obs.push({x:nextObs,w,h,side});
+ if(Math.random()<.6){const cy=Math.random()<.5?H/2:(side==='f'?CEIL+34:FLOOR-34);for(let i=0;i<3;i++)coins.push({x:nextObs+w+60+i*34,y:cy+Math.sin(i)*8,got:false})}
+ nextObs+=speed*rand(.95,1.7)+w}
+function doFlip(){if(!running||over)return;if(P.on){P.dir*=-1;P.on=false;P.vy=P.dir*120;buf=0}else buf=.16}
+function hit(o){const bx=o.x-x+PX,by=o.side==='f'?FLOOR-o.h:CEIL,bw=o.w,bh=o.h;const cx=clamp(PX,bx,bx+bw),cy=clamp(P.y,by,by+bh);return Math.hypot(PX-cx,P.y-cy)<R-3}
+function update(dt){
+ speed=Math.min(470,240+t0*5);t0+=dt;x+=speed*dt;
+ if(!P.on){P.vy+=P.dir*GA*dt;P.y+=P.vy*dt;P.rot+=dt*P.dir*-9;
+  if(P.dir>0&&P.y>=FLOOR-R){P.y=FLOOR-R;P.vy=0;P.on=true;P.rot=0;flash=.12}
+  if(P.dir<0&&P.y<=CEIL+R){P.y=CEIL+R;P.vy=0;P.on=true;P.rot=0;flash=.12}}
+ if(P.on&&buf>0){buf-=dt;if(buf>0)doFlip()}else if(buf>0)buf-=dt;
+ while(nextObs<x+W+120)spawn();
+ obs=obs.filter(o=>o.x+o.w>x-PX-40);coins=coins.filter(c=>!c.got&&c.x>x-PX-40);
+ for(const o of obs)if(hit(o)){end();return}
+ for(const c of coins){if(Math.hypot(c.x-x+PX-PX,c.y-P.y)<R+11&&!c.got){c.got=true;gotc++}}
+ if(flash>0)flash-=dt;hud()}
+function draw(t){drawSky(ctx,W,H,0,'#0b1236','#141d46');
+ // 窓（遠景）
+ for(let i=0;i<4;i++){const wx=((i*170-x*.3)%680+680)%680-110;ctx.fillStyle='#050921';ctx.strokeStyle='#6b7dc0';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(wx,CEIL+60,64,64,10);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.fillRect(wx+14,CEIL+80,2,2);ctx.fillRect(wx+44,CEIL+104,2,2)}
+ // 天井と床
+ for(const[y0,y1]of[[0,CEIL],[FLOOR,H]]){const g=ctx.createLinearGradient(0,y0,0,y1);g.addColorStop(0,'#34447f');g.addColorStop(1,'#222d63');ctx.fillStyle=g;ctx.fillRect(0,y0,W,y1-y0);}
+ ctx.fillStyle='#1a234f';const off=(x*.9)%80;for(let px=-off;px<W;px+=80){ctx.fillRect(px,0,4,CEIL);ctx.fillRect(px,FLOOR,4,H-FLOOR);ctx.fillStyle='#ffe9a8';ctx.fillRect(px+30,CEIL-8,22,5);ctx.fillRect(px+30,FLOOR+3,22,5);ctx.fillStyle='#1a234f'}
+ ctx.fillStyle='#62d6c6';ctx.fillRect(0,CEIL-3,W,3);ctx.fillRect(0,FLOOR,W,3);
+ // 障害物
+ for(const o of obs){const bx=o.x-x+PX,by=o.side==='f'?FLOOR-o.h:CEIL;const g=ctx.createLinearGradient(bx,0,bx+o.w,0);g.addColorStop(0,'#ff9a6e');g.addColorStop(1,'#b8452a');ctx.fillStyle=g;ctx.strokeStyle='#ffd0b8';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(bx,by,o.w,o.h,8);ctx.fill();ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(bx+8,by+8,o.w-16,5)}
+ for(const c of coins)drawStar(ctx,c.x-x+PX,c.y,10,'#ffd35a',t/700);
+ // プレイヤー
+ const bob=P.on?Math.sin(t/70)*1.5:0;
+ if(P.on){ctx.fillStyle='rgba(255,255,255,.3)';for(let i=1;i<4;i++)ctx.fillRect(PX-R-i*14,P.y+(P.dir>0?R-4:-R+2),8,3)}
+ drawMascot(ctx,PX,P.y+bob,R,{rot:P.rot,glow:!P.on,oh:!P.on,sy:P.dir});
+ if(flash>0){ctx.fillStyle=`rgba(98,214,198,${flash*3})`;ctx.fillRect(0,P.dir>0?FLOOR-4:CEIL,W,4)}}
+function frame(now){if(!running)return;const dt=Math.min(.033,(now-prev)/1000);prev=now;if(!document.hidden)update(dt);draw(now);if(running)requestAnimationFrame(frame)}
+function start(){reset();t0=0;running=true;prev=performance.now();requestAnimationFrame(frame)}
+function end(){running=false;over=true;const m=Math.floor(x/20),nb=m>best;if(nb){best=m;store.set('zg-best',m);$('#bs').textContent=m}draw(performance.now());
+ showEnd({title:'ゲームオーバー',big:`${m}<small> m</small>`,text:`星を ${gotc}こ あつめたよ。`,meta:nb?'ベスト更新！':`ベスト ${best}m`,share:`「無重力ランナー」で ${m}m 走ったよ！（星${gotc}こ）`,onAgain:start})}
+cv.addEventListener('pointerdown',(e)=>{e.preventDefault();doFlip()});
+$('#flip').addEventListener('click',doFlip);
+document.addEventListener('keydown',(e)=>{if((e.key===' '||e.key==='ArrowUp'||e.key==='ArrowDown')&&$('#intro').hidden&&$('#end').hidden){e.preventDefault();doFlip()}});
+$('#btnStart').addEventListener('click',()=>{$('#intro').hidden=true;start()});
+reset();draw(0);
+
+
+})();
+</script>
+</body>
+</html>
